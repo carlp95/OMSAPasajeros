@@ -1,35 +1,24 @@
 package com.software.nac.omsapasajero;
 
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-
 /**
- * Created by Neury on 8/1/2017.
+ * Created by Neury on 8/25/2017.
  */
 
-public class APIParadas {
+public class UltimaParada {
     private String id;
     private String nombre;
-    private String ruta;
+    private String ruta; // esto hay que enviar un null cambiar el JSON
     private String paradaAnterior;
     private String paradaSiguiente;
     private Coordenadas coordenada;
 
 
-    public String getRuta() {
-        return ruta;
-    }
+    public UltimaParada() {
 
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
     }
 
     public String getId() {
         return id;
-    }
-
-    public APIParadas() {
-
     }
 
     public void setId(String id) {
@@ -43,6 +32,8 @@ public class APIParadas {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+
 
     public String getParadaAnterior() {
         return paradaAnterior;
@@ -68,15 +59,11 @@ public class APIParadas {
         this.coordenada = coordenada;
     }
 
-    @Override
-    public String toString() {
-        return "APIParadas{" +
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", ruta='" + ruta + '\'' +
-                ", paradaAnterior='" + paradaAnterior + '\'' +
-                ", paradaSiguiente='" + paradaSiguiente + '\'' +
-                ", coordenada=" + coordenada +
-                '}';
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
     }
 }

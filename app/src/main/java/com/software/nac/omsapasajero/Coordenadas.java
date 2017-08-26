@@ -9,6 +9,9 @@ public class Coordenadas {
     private String latitude;
     private String longitud;
 
+    public Coordenadas() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -33,5 +36,12 @@ public class Coordenadas {
         this.longitud = longitud;
     }
 
-
+    @Override
+    public String toString() {
+        return "Coordenadas{" +
+                "id=" + id +
+                ", latitude='" + latitude + '\'' +
+                ", longitud='" + longitud + '\'' +
+                '}';
+    }
 }
