@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.os.AsyncTask;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ViewFlipper;
 
 import com.github.florent37.viewanimator.AnimationListener;
@@ -27,6 +28,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.software.nac.omsapasajero.Omsa.getBackground;
 
@@ -81,6 +85,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        ListView listView = (ListView) findViewById(R.id.listViewCorredores);
+        Adaptador adaptador = new Adaptador(this, Arrays.asList(new Ruta(1, "Santiago", "Corredor Guevo", "true"), new Ruta(2, "Santiago", "Corredor Semilla", "true"), new Ruta(3, "Santo Domingo", "Corredor Maldito Ciego", "true")));
+
+        listView.setAdapter(adaptador);
+        adaptador.notifyDataSetChanged();
+
 
     }
 
@@ -93,6 +103,21 @@ public class MainActivity extends AppCompatActivity
 
     public void setIdCorredor(int position) {
         idCorredorToOpen = position;
+
+        ViewAnimator.animate(findViewById(R.id.menuAbierto))
+                .duration(2000)
+                .translationY(0, 1800)
+                .onStop(new AnimationListener.Stop() {
+                    @Override
+                    public void onStop() {
+                        viewFlipper.showNext();
+                        ViewAnimator.animate(findViewById(R.id.menuRutas))
+                                .duration(1000)
+                                .translationY(400, 0)
+                                .start();
+                    }
+                })
+                .start();
     }
 
 
@@ -242,6 +267,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showOpenMenu() {
+        ViewAnimator.animate(findViewById(R.id.menuRutas))
+                .duration(1000)
+                .translationY(0, 400)
+                .onStop(new AnimationListener.Stop() {
+                    @Override
+                    public void onStop() {
+                        viewFlipper.showPrevious();
+                        ViewAnimator.animate(findViewById(R.id.menuAbierto))
+                                .duration(2000)
+                                .translationY(1800, 0)
+                                .start();
+                    }
+                })
+                .start();
 
     }
 

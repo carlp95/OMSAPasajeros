@@ -22,6 +22,13 @@ public class Ruta {
 
     }
 
+    public Ruta(int id, String ciudad, String nombreCorredor, String esDireccionSubida) {
+        this.id = id;
+        this.ciudad = ciudad;
+        this.nombreCorredor = nombreCorredor;
+        this.esDireccionSubida = esDireccionSubida;
+    }
+
     public int getId() {
         return id;
     }

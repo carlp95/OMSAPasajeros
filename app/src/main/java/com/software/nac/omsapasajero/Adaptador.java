@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +87,7 @@ public class Adaptador extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 ((MainActivity) activity).setIdCorredor(data.get(position).getId());
+                Toast.makeText(activity, String.format("#%s %s, %s", data.get(position).getId(), data.get(position).getNombreCorredor(), data.get(position).getCiudad()), Toast.LENGTH_SHORT).show();
             }
         });
 
