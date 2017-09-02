@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "897467120566",
+    "firebase_url": "https://omsapasajero2-f3145.firebaseio.com",
+    "project_id": "omsapasajero2-f3145",
+    "storage_bucket": "omsapasajero2-f3145.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897467120566:android:f04d15136a828261",
+        "android_client_info": {
+          "package_name": "com.software.nac.omsapasajero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "897467120566-tle8dvrktbonflkdmptmll6lag6atb9c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.software.nac.omsapasajero",
+            "certificate_hash": "160a267ad8439fc11d9e42dd17d61fe62abf054d"
+          }
+        },
+        {
+          "client_id": "897467120566-bn8soc34b634tsgc1cbmuietv42e30pf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJ_v629Mfe7ouJCDfDoO8gijrFpiKs6-4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "897467120566-bn8soc34b634tsgc1cbmuietv42e30pf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

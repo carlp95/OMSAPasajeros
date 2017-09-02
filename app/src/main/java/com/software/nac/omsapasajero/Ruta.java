@@ -1,18 +1,20 @@
 package com.software.nac.omsapasajero;
 
+import java.util.Arrays;
+
 /**
  * Created by Neury on 8/25/2017.
  */
 
 public class Ruta {
-    private String id;
+    private int id;
     private String distanciaTotal;
     private String fechaCreada;
     private String fechaUltimaModificacion;
     private String ciudad;
     private String nombreCorredor;
     private String esDireccionSubida;
-    private Coordenadas coordenadas;
+    private Coordenadas[] coordenadas;
     private String paradas; // esto debe llegar null hay que cambiar el Json
 
 
@@ -20,11 +22,11 @@ public class Ruta {
 
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -76,11 +78,11 @@ public class Ruta {
         this.esDireccionSubida = esDireccionSubida;
     }
 
-    public Coordenadas getCoordenadas() {
+    public Coordenadas[] getCoordenadas() {
         return coordenadas;
     }
 
-    public void setCoordenadas(Coordenadas coordenadas) {
+    public void setCoordenadas(Coordenadas[] coordenadas) {
         this.coordenadas = coordenadas;
     }
 
@@ -90,5 +92,20 @@ public class Ruta {
 
     public void setParadas(String paradas) {
         this.paradas = paradas;
+    }
+
+    @Override
+    public String toString() {
+        return "Ruta{" +
+                "id='" + id + '\'' +
+                ", distanciaTotal='" + distanciaTotal + '\'' +
+                ", fechaCreada='" + fechaCreada + '\'' +
+                ", fechaUltimaModificacion='" + fechaUltimaModificacion + '\'' +
+                ", ciudad='" + ciudad + '\'' +
+                ", nombreCorredor='" + nombreCorredor + '\'' +
+                ", esDireccionSubida='" + esDireccionSubida + '\'' +
+                ", coordenadas=" + Arrays.toString(coordenadas) +
+                ", paradas='" + paradas + '\'' +
+                '}';
     }
 }

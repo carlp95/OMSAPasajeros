@@ -6,6 +6,7 @@ package com.software.nac.omsapasajero;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +40,8 @@ public class DialogActivity extends Activity implements OnClickListener {
             case R.id.ok_btn_id:
 
                 showToastMessage("subida");
+                Intent i = new Intent(DialogActivity.this, MapsActivity.class);
+                startActivity(i);
                 this.finish();
 
                 break;

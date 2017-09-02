@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.software.nac.omsapasajero.MainActivity"
+    tools:activity="com.software.nac.omsapasajero.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
 
@@ -23,7 +23,6 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:id="@+id/menuCerrado"
             android:layout_width="match_parent"
             android:layout_height="128dp"
@@ -31,19 +30,50 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="64dp"
-            android:background="@color/colorBackground">
+            android:background="@color/colorBackground"
+            android:orientation="vertical"
+            android:weightSum="1">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:gravity="center"
+                android:text="Corredores"
+                android:textAlignment="center"
+                android:textSize="45sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:id="@+id/menuAbierto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="64dp"
-            android:background="@color/colorBackground">
+            android:background="@color/colorBackground"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:gravity="center"
+                android:text="Corredores"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="45sp"
+                android:textStyle="bold|italic" />
+
+            <ListView
+                android:id="@+id/listViewCorredores"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
+
 
         </LinearLayout>
 
@@ -57,6 +87,35 @@
             android:layout_marginTop="64dp"
             android:background="@color/colorBackground"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selecione el tipo de ruta"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/idbajada"
+                    android:layout_width="126dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.04"
+                    android:text="Bajada" />
+
+                <Button
+                    android:id="@+id/idSubida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.09"
+                    android:text="Subida" />
+            </LinearLayout>
 
         </LinearLayout>
 
