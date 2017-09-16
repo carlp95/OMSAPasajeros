@@ -1,5 +1,6 @@
 package com.software.nac.omsapasajero;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -9,6 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,10 +26,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.JsonArray;
 
+import org.json.JSONException;
+import org.jsoup.select.Evaluator;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -33,33 +42,131 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
-import static com.software.nac.omsapasajero.MainActivity.objects;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static com.software.nac.omsapasajero.MainActivity.listRuta;
+
+
+public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
+    Marker m;
+    private int id;
 
+    public static APIParadas[] paradas;
     public static Ruta objectsRuta;
+
+
     APIParadas apiParadas = new APIParadas();
 
+    Double mmlatitude = 19.2836;
+    Double mmlongitude = -70.7262;
+    Double mmlatActual = 19.83623;
+    Double mmlonActual = -70.83638;
+
+    private Boolean mapReady = false, postExecute = false;
 
     @Override
     protected void onStart() {
         super.onStart();
-        new MapsActivity.HttpRequestTask().execute();
+        new HttpRequestTask().execute();
+        // new MapsActivity.HttpRequestTask().execute();
+       /* hiloconexion = new GetWebService();
+        hiloconexion.execute(mmlatitude.toString(),mmlongitude.toString(),mmlatActual.toString(),mmlonActual.toString());
+*/
+
     }
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, Ruta> {
+    @Override
+    protected void onStop() {
+        super.onStop();
+        paradas = null;
+        objectsRuta = null;
+
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        System.out.printf("hola mundo");
+
+
+        //System.out.printf("resultado-> "+ id);
+        //*Intent nextScreen = new Intent(MapsActivity.this,DialogActivity.class);
+        // nextScreen.putExtra("userId", "" + id);
+        //  startActivity(nextScreen);*//*
+
+        //System.out.printf("resultado-> "+ latitude +" y " + longitude);
+
+
+     /*   mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+            public void onInfoWindowClick(Marker marker) {
+                String id = marker.getId();
+                Double latitude = marker.getPosition().latitude;
+                Double longitude = marker.getPosition().longitude;
+                //System.out.printf("resultado-> "+ id);
+                *//*Intent nextScreen = new Intent(MapsActivity.this,DialogActivity.class);
+                nextScreen.putExtra("userId", "" + id);
+                startActivity(nextScreen);*//*
+
+                System.out.printf("resultado-> "+ latitude +" y " + longitude);
+
+                //test(id);
+
+            }
+
+
+        });*/
+
+
+    }
+
+    private class HttpRequestTask extends AsyncTask<Void, Void, APIParadas> {
         @Override
-        protected Ruta doInBackground(Void... params) {
-            //==================================Para la Ruta==========================
+        protected APIParadas doInBackground(Void... params) {
 
             try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/paradas/ruta/" + id);
+
+                HttpEntity<?> entity = new HttpEntity<>(headers);
+
+                paradas = getRestTemplate().exchange(
+                        builder.build().encode().toUri(),
+                        HttpMethod.GET,
+                        entity,
+                        APIParadas[].class).getBody();
+
+                //    System.out.println("objects = " + paradas[0]);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //==================================Para la Ruta==========================
+
+         /*   try {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
@@ -71,18 +178,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         builder.build().encode().toUri(),
                         HttpMethod.GET,
                         entity,
-                        Ruta.class).getBody();
+                        Ruta[].class).getBody();
 
-                System.out.println("Rutasss = " + objectsRuta);
+                System.out.println("objects = " + objectsRuta[0]);
 
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+*/
+
 
             return null;
         }
 
+        //====================================================================================//
 
         public RestTemplate getRestTemplate() {
             RestTemplate restTemplate = new RestTemplate();
@@ -93,10 +203,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         @Override
-        protected void onPostExecute(Ruta info) {
-            //  System.out.printf(info.getId());
+        protected void onPostExecute(APIParadas info) {
+            postExecute = true;
 
-            //infoIdText.setText(info.getId());
+            if (mapReady) {
+                final ArrayList<Marker> list = new ArrayList<>();
+
+                try {
+                    int q = paradas.length;
+                    for (int j = 0; j < q; j++) {
+                        Double lon = Double.parseDouble(paradas[j].getCoordenada().getLongitud());
+                        Double lat = Double.parseDouble(paradas[j].getCoordenada().getLatitude());
+                        LatLng latLng1 = new LatLng(lat, lon);
+                        m = mMap.addMarker(new MarkerOptions()
+                                .title("Parada de la OMSA")
+                                .snippet("Tocar aqui para mas informacion")
+                                .position(latLng1)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
+                        list.add(m);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
 
     }
@@ -106,12 +237,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        // More info: https://developers.google.com/maps/documentation/android/infowindows
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
         System.out.printf("=====Create===");
         mapFragment.getMapAsync(this);
+
+        id = getIntent().getExtras().getInt("id", 1);
+
+        Log.i("IdSI", String.valueOf(id));
+
+
     }
 
 
@@ -129,13 +267,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mapReady = true;
         mMap = googleMap;
+        final ArrayList<Marker> list = new ArrayList<>();
+
 //=============================Para central el mapa con coordenadas en el monumento==========================
         LatLng lt = new LatLng(19.4507303, -70.69428563);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(lt));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 //====================================================================================================
 
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                // Determine what marker is clicked by using the argument passed in
+                // for example, marker.getTitle() or marker.getSnippet().
+                // Code here for navigating to fragment activity.
+                String id = marker.getId();
+                Double latitude = marker.getPosition().latitude;
+                Double longitude = marker.getPosition().longitude;
+                Double latActual = mLastLocation.getLatitude();
+                Double lonActual = mLastLocation.getLongitude();
+
+                Log.i("dddd", String.valueOf(latitude));
+                Log.i("dddd", String.valueOf(longitude));
+                Log.i("ddddActual", String.valueOf(latActual));
+                Log.i("ddddActuallo", String.valueOf(lonActual));
+
+
+                Intent nextScreen = new Intent(MapsActivity.this, Info.class);
+                // nextScreen.putExtra("userId", "" + id);
+                startActivity(nextScreen);
+
+            }
+        });
+
+        if (postExecute) {
+
+            try {
+                int q = paradas.length;
+                for (int j = 0; j < q; j++) {
+                    Double lon = Double.parseDouble(paradas[j].getCoordenada().getLongitud());
+                    Double lat = Double.parseDouble(paradas[j].getCoordenada().getLatitude());
+                    LatLng latLng1 = new LatLng(lat, lon);
+                    m = mMap.addMarker(new MarkerOptions()
+                            .title("Parada de la OMSA")
+                            .snippet("Tocar aqui para mas informacion")
+                            .position(latLng1)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
+                    list.add(m);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng1, 17));
 
 
 
@@ -167,6 +356,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
     }
+
+
+/*
+    public void setRuta(Coordenadas[] coordenadas){
+        final Coordenadas[] coordenadas1 = coordenadas;
+        Button bajada =(Button) findViewById(R.id.idbajada);
+        bajada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String coordenadas = coordenadas1[0].getLatitude();
+
+                Log.i("inf000", coordenadas);
+            }
+        });
+    }*/
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -214,16 +420,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
 
         mLastLocation = location;
-        Double lon = Double.parseDouble(objects[0].getCoordenada().getLongitud());
-        Double lat = Double.parseDouble(objects[0].getCoordenada().getLatitude());
-        LatLng latLng1 = new LatLng(lat, lon);
-
         ArrayList<LatLng> latLng = new ArrayList<>();
+        for (Ruta ruta : listRuta) {
+            if (ruta.getId() == id) {
+                objectsRuta = ruta;
+                //  Toast.makeText(this, objectsRuta.getEsDireccionSubida(), Toast.LENGTH_SHORT).show();
+                break;
+            }
 
-        int n = objectsRuta.getCoordenadas().length;
-        for (int i = 0; i < n; i++) {
-            Double lati = Double.parseDouble(objectsRuta.getCoordenadas()[i].getLatitude());
-            Double lono = Double.parseDouble(objectsRuta.getCoordenadas()[i].getLongitud());
+        }
+        try {
+            int n = objectsRuta.getCoordenadas().length;
+            for (int i = 0; i < n; i++) {
+                Double lati = Double.parseDouble(objectsRuta.getCoordenadas()[i].getLatitude());
+                Double lono = Double.parseDouble(objectsRuta.getCoordenadas()[i].getLongitud());
 //            Double lati1;
 //            Double lono1;
 //
@@ -235,14 +445,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                lono1 = Double.parseDouble(objectsRuta.getCoordenadas()[0].getLongitud());
 //            }
 
-            latLng.add(new LatLng(lati, lono));
+                latLng.add(new LatLng(lati, lono));
+            }
+            Polyline line = mMap.addPolyline(new PolylineOptions()
+                    .addAll(latLng).width(10).color(Color.rgb(076, 145, 065)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Polyline line = mMap.addPolyline(new PolylineOptions()
-                .addAll(latLng).width(10).color(Color.rgb(076, 145, 065)));
-        //System.out.printf(lat + lon +"datos");
 
-
-        //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
     }
 
@@ -250,7 +461,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // private MarkerOptions options = new MarkerOptions();
     // private ArrayList<LatLng> latlngs = new ArrayList<>();
 
-
+//
 /*
     @Override
     public void onMapReady(GoogleMap googleMap) {
