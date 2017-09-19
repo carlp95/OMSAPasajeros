@@ -15,6 +15,7 @@ public class Autobus {
     private String anoFabricacion;
     private String activo;
     private String conductor;
+    private String matricula;
     private String fechaCreada;
     private String ultimaFechaModificada;
     private String precio;
@@ -26,6 +27,14 @@ public class Autobus {
 
     public Autobus() {
 
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
     }
 
     public String getId() {
@@ -154,5 +163,28 @@ public class Autobus {
 
     public void setRaspberryPiNumeroSerial(String raspberryPiNumeroSerial) {
         this.raspberryPiNumeroSerial = raspberryPiNumeroSerial;
+    }
+
+    @Override
+    public String toString() {
+        return "Autobus{" +
+                "id='" + id + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", cantidadDeAsientos='" + cantidadDeAsientos + '\'' +
+                ", peso='" + peso + '\'' +
+                ", ruta=" + ruta +
+                ", ultimaParada=" + ultimaParada +
+                ", anoFabricacion='" + anoFabricacion + '\'' +
+                ", activo='" + activo + '\'' +
+                ", conductor='" + conductor + '\'' +
+                ", matricula='" + matricula + '\'' +
+                ", fechaCreada='" + fechaCreada + '\'' +
+                ", ultimaFechaModificada='" + ultimaFechaModificada + '\'' +
+                ", precio='" + precio + '\'' +
+                ", tieneAireAcondicionado='" + tieneAireAcondicionado + '\'' +
+                ", cantidadDePasajerosActual='" + cantidadDePasajerosActual + '\'' +
+                ", coordenada=" + coordenada +
+                ", raspberryPiNumeroSerial='" + raspberryPiNumeroSerial + '\'' +
+                '}';
     }
 }

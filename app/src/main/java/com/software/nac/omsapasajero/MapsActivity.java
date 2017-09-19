@@ -74,6 +74,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
     public static APIParadas[] paradas;
     public static Ruta objectsRuta;
+    public Autobus autobus;
+    public DistanceAndTime distanceAndTime;
+    public Autobus[] listAutobus;
 
 
     APIParadas apiParadas = new APIParadas();
@@ -83,12 +86,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     Double mmlatActual = 19.83623;
     Double mmlonActual = -70.83638;
 
-    private Boolean mapReady = false, postExecute = false;
+    private Boolean mapReady = false, postExecute = false, postExecuteForAutobus=false;
 
     @Override
     protected void onStart() {
         super.onStart();
         new HttpRequestTask().execute();
+
         // new MapsActivity.HttpRequestTask().execute();
        /* hiloconexion = new GetWebService();
         hiloconexion.execute(mmlatitude.toString(),mmlongitude.toString(),mmlatActual.toString(),mmlonActual.toString());
@@ -158,7 +162,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         entity,
                         APIParadas[].class).getBody();
 
-                //    System.out.println("objects = " + paradas[0]);
+                    System.out.println("objects = " + paradas[0]);
 
 
             } catch (Exception e) {
@@ -205,6 +209,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         @Override
         protected void onPostExecute(APIParadas info) {
             postExecute = true;
+            Log.i("paradaaaaaas",paradas[0].getId());
+            Log.i("paradaaaaaas",paradas[0].toString());
 
             if (mapReady) {
                 final ArrayList<Marker> list = new ArrayList<>();
@@ -231,6 +237,129 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         }
 
     }
+
+    //______________________________________Get_Autobus_______________________________//
+//obtener la lista de autobuses de una ruta
+    private class GetAutobus extends AsyncTask<Void, Void, Autobus> {
+        @Override
+        protected Autobus doInBackground(Void... params) {
+
+            try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/autobuses/buscar/ruta/" + id);
+
+                HttpEntity<?> entity = new HttpEntity<>(headers);
+
+                listAutobus = getRestTemplate().exchange(
+                        builder.build().encode().toUri(),
+                        HttpMethod.GET,
+                        entity,
+                        Autobus[].class).getBody();
+
+                    System.out.println("estoy en autobus)"+listAutobus[0].toString());
+                   // Log.i("Autoooooooo", autobus.getActivo());
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        public RestTemplate getRestTemplate() {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            return restTemplate;
+        }
+
+
+        @Override
+        protected void onPostExecute(Autobus info) {
+            postExecuteForAutobus = true;
+
+            if (mapReady) {
+
+                try {
+                    int q = listAutobus.length;
+                    for (int j = 0; j < q; j++) {
+                        Double lon = Double.parseDouble(listAutobus[j].getCoordenada().getLongitud());
+                        Double lat = Double.parseDouble(listAutobus[j].getCoordenada().getLatitude());
+                        LatLng latLng1 = new LatLng(lat, lon);
+                        mMap.addMarker(new MarkerOptions()
+                                .title("Autobus")
+                                .snippet("...")
+                                .position(latLng1)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.autobus)));
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+    }
+
+
+    //___________________________________Obtener_Datos_Del_Autobus_______________//
+//obtener la infomacion del autobus mas cercano a una parada.
+
+    private class AutobusConDatos extends AsyncTask<Integer, Void, DistanceAndTime> {
+        @Override
+        protected DistanceAndTime doInBackground(Integer... params) {
+
+            //  try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            Integer id = params[0];
+            String cadena = Integer.toString(id);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/distancia/" + cadena);
+
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            distanceAndTime = getRestTemplate().exchange(
+                    builder.build().encode().toUri(),
+                    HttpMethod.GET,
+                    entity,
+                    DistanceAndTime.class).getBody();
+
+           // System.out.println("estoy en autobus)"+autobus.toString());
+            // Log.i("Autoooooooo", autobus.getActivo());
+
+
+         /*   } catch (Exception e) {
+                e.printStackTrace();
+            }*/
+
+            return null;
+        }
+
+        public RestTemplate getRestTemplate() {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            return restTemplate;
+        }
+
+
+        @Override
+        protected void onPostExecute(DistanceAndTime info) {
+           Log.i("Termine Hilo:","para los datos del autobus");
+
+
+
+
+        }
+
+    }
+
 
 
     @Override
@@ -288,13 +417,17 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 Double longitude = marker.getPosition().longitude;
                 Double latActual = mLastLocation.getLatitude();
                 Double lonActual = mLastLocation.getLongitude();
+                String idParada = marker.getId();
+                int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
+                idParadaConvert = idParadaConvert+1;
 
                 Log.i("dddd", String.valueOf(latitude));
                 Log.i("dddd", String.valueOf(longitude));
+                Log.i("Id parada", String.valueOf(idParadaConvert));
                 Log.i("ddddActual", String.valueOf(latActual));
                 Log.i("ddddActuallo", String.valueOf(lonActual));
 
-
+                new AutobusConDatos().execute(idParadaConvert);
                 Intent nextScreen = new Intent(MapsActivity.this, Info.class);
                 // nextScreen.putExtra("userId", "" + id);
                 startActivity(nextScreen);
@@ -306,6 +439,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
             try {
                 int q = paradas.length;
+
                 for (int j = 0; j < q; j++) {
                     Double lon = Double.parseDouble(paradas[j].getCoordenada().getLongitud());
                     Double lat = Double.parseDouble(paradas[j].getCoordenada().getLatitude());
@@ -343,13 +477,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
         // Add a marker in Sydney and move the camera
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
 
@@ -419,6 +546,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     @Override
     public void onLocationChanged(Location location) {
 
+        new GetAutobus().execute();
         mLastLocation = location;
         ArrayList<LatLng> latLng = new ArrayList<>();
         for (Ruta ruta : listRuta) {
@@ -454,6 +582,23 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             e.printStackTrace();
         }
 
+
+        if (postExecute){
+            try {
+
+                Double lon = Double.parseDouble(autobus.getCoordenada().getLongitud());
+                Double lat = Double.parseDouble(autobus.getCoordenada().getLatitude());
+                LatLng latLng1 = new LatLng(lat, lon);
+                mMap.addMarker(new MarkerOptions()
+                        .title("Autobus")
+                        .snippet("...")
+                        .position(latLng1)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.autobus)));
+                   // Log.i("Autobus11111", autobus.getActivo());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
