@@ -1,16 +1,19 @@
 package com.software.nac.omsapasajero;
 
+import java.io.Serializable;
+
 /**
  * Created by Neury on 8/25/2017.
  */
 
-public class Autobus {
+public class Autobus implements Serializable {
 
     private String id;
     private String modelo;
     private String cantidadDeAsientos;
     private String peso;
     private Ruta ruta;
+    //private String ultimaParada;
     private UltimaParada ultimaParada;
     private String anoFabricacion;
     private String activo;
@@ -24,10 +27,19 @@ public class Autobus {
     private Coordenadas coordenada;
     private String raspberryPiNumeroSerial;
 
+    public UltimaParada getUltimaParada() {
+        return ultimaParada;
+    }
+
+    public void setUltimaParada(UltimaParada ultimaParada) {
+        this.ultimaParada = ultimaParada;
+    }
 
     public Autobus() {
 
     }
+
+
 
     public String getMatricula() {
         return matricula;
@@ -77,14 +89,14 @@ public class Autobus {
         this.ruta = ruta;
     }
 
-    public UltimaParada getUltimaParada() {
+   /* public UltimaParada getUltimaParada() {
         return ultimaParada;
     }
 
     public void setUltimaParada(UltimaParada ultimaParada) {
         this.ultimaParada = ultimaParada;
     }
-
+*/
     public String getAnoFabricacion() {
         return anoFabricacion;
     }
@@ -173,7 +185,7 @@ public class Autobus {
                 ", cantidadDeAsientos='" + cantidadDeAsientos + '\'' +
                 ", peso='" + peso + '\'' +
                 ", ruta=" + ruta +
-                ", ultimaParada=" + ultimaParada +
+                ", ultimaParada='" + ultimaParada + '\'' +
                 ", anoFabricacion='" + anoFabricacion + '\'' +
                 ", activo='" + activo + '\'' +
                 ", conductor='" + conductor + '\'' +

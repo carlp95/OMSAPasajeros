@@ -1,12 +1,13 @@
 package com.software.nac.omsapasajero;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by Neury on 8/25/2017.
  */
 
-public class Ruta {
+public class Ruta implements Serializable {
     private int id;
     private String distanciaTotal;
     private String fechaCreada;

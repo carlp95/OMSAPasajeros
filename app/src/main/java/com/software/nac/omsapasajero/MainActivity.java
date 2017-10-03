@@ -54,13 +54,6 @@ public class MainActivity extends AppCompatActivity
         new HttpRequestTask2().execute();
 
     }
-
-
-
-
-
-
-
 //================================================================================//
 
         private class HttpRequestTask2 extends AsyncTask<Void, Void, Ruta> {
@@ -80,7 +73,7 @@ public class MainActivity extends AppCompatActivity
                         entity,
                         Ruta[].class).getBody();
 
-                System.out.println("objects ============================================ " + listRuta);
+                //System.out.println("objects ============================================ " + listRuta);
 
 
 
@@ -108,17 +101,22 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(View v) {
                     ListView listView = (ListView) findViewById(R.id.listViewCorredores);
 
-                    //ArrayList<Ruta> list = (ArrayList<Ruta>) Arrays.asList(listRuta);
-                    ArrayList<Ruta> list = new ArrayList<Ruta>(Arrays.asList(listRuta));
-                    //  Log.i("datos" , String.valueOf(list));
-                    Adaptador adaptador = new Adaptador(MainActivity.this,list);
+                    try {
+                        //ArrayList<Ruta> list = (ArrayList<Ruta>) Arrays.asList(listRuta);
+                        ArrayList<Ruta> list = new ArrayList<Ruta>(Arrays.asList(listRuta));
+                        //  Log.i("datos" , String.valueOf(list));
+                        Adaptador adaptador = new Adaptador(MainActivity.this,list);
 
-                    listView.setAdapter(adaptador);
-                    adaptador.notifyDataSetChanged();
+                        listView.setAdapter(adaptador);
+                        adaptador.notifyDataSetChanged();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
 
                     ViewAnimator.animate(v)
                             .translationY(400)
-                            .duration(1000)
+                            .duration(500)
                             .onStop(new AnimationListener.Stop() {
                                 @Override
                                 public void onStop() {
@@ -126,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 
                                     ViewAnimator.animate(findViewById(R.id.menuAbierto))
                                             .translationY(1800, 0)
-                                            .duration(2000)
+                                            .duration(500)
                                             .start();
                                 }
                             })
@@ -138,8 +136,6 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-
-
 
     //============fuera====================================================================//
 
@@ -163,6 +159,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);*/
+
+        findViewById(R.id.iraid).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent a = new Intent(MainActivity.this, MapsActivityIrA.class);
+                startActivity(a);
+            }
+        });
 
         findViewById(R.id.idbajada).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,14 +211,14 @@ public class MainActivity extends AppCompatActivity
         idCorredorToOpen = position;
 
         ViewAnimator.animate(findViewById(R.id.menuAbierto))
-                .duration(1000)
+                .duration(500)
                 .translationY(0, 1800)
                 .onStop(new AnimationListener.Stop() {
                     @Override
                     public void onStop() {
                         viewFlipper.showNext();
                         ViewAnimator.animate(findViewById(R.id.menuRutas))
-                                .duration(1000)
+                                .duration(300)
                                 .translationY(400, 0)
                                 .start();
                     }
@@ -250,14 +254,14 @@ public class MainActivity extends AppCompatActivity
 
     private void showCloseMenu() {
         ViewAnimator.animate(findViewById(R.id.menuAbierto))
-                .duration(1000)
+                .duration(500)
                 .translationY(0, 1800)
                 .onStop(new AnimationListener.Stop() {
                     @Override
                     public void onStop() {
                         viewFlipper.showPrevious();
                         ViewAnimator.animate(findViewById(R.id.menuCerrado))
-                                .duration(1000)
+                                .duration(300)
                                 .translationY(400, 0)
                                 .start();
                     }
@@ -267,14 +271,14 @@ public class MainActivity extends AppCompatActivity
 
     private void showOpenMenu() {
         ViewAnimator.animate(findViewById(R.id.menuRutas))
-                .duration(1000)
+                .duration(500)
                 .translationY(0, 400)
                 .onStop(new AnimationListener.Stop() {
                     @Override
                     public void onStop() {
                         viewFlipper.showPrevious();
                         ViewAnimator.animate(findViewById(R.id.menuAbierto))
-                                .duration(2000)
+                                .duration(300)
                                 .translationY(1800, 0)
                                 .start();
                     }

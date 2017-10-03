@@ -7,5 +7,6 @@
     <color name="colorText1">#000000</color>
     <color name="colorText2">#000000</color>
     <color name="colorBackground1">#cfd7cf</color>
+    <color name="alerta">#ff0000</color>
     <color name="colorBackground2">#e6dbcb</color>
 </resources>

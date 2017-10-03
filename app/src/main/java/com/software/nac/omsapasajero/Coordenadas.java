@@ -1,10 +1,12 @@
 package com.software.nac.omsapasajero;
 
+import java.io.Serializable;
+
 /**
  * Created by Neury on 8/1/2017.
  */
 
-public class Coordenadas {
+public class Coordenadas implements Serializable {
     private Long id;
     private String latitude;
     private String longitud;

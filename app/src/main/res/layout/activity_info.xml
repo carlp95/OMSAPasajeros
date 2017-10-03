@@ -1,15 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#FFFFFF"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:activity=".MainActivity">
-
+    tools:activity=".MainActivity"
+    android:weightSum="1">
 
     <TextView
         android:id="@+id/textView1"
@@ -17,11 +17,230 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="Informacion"
+        android:text="Información "
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewInf"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Tiempo Aproximado: "
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textViewTiempoAproximado"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Cargando..."
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_weight="0.18"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewDurationSin"
+            android:layout_width="134dp"
+            android:layout_height="match_parent"
+            android:text="Tiempo sin Tráfico: "
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textViewDurationSinR"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Cargando..."
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_weight="0.18"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewDurationCon"
+            android:layout_width="135dp"
+            android:layout_height="match_parent"
+            android:text="Tiempo con Tráfico:"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textViewDurationConTR"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Cargando..."
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_weight="0.18"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewConductor"
+            android:layout_width="133dp"
+            android:layout_height="match_parent"
+            android:text="Conductor:"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textViewConductorR"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Cargando..."
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_weight="0.18"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewPrecio"
+            android:layout_width="133dp"
+            android:layout_height="match_parent"
+            android:text="Precio:"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textViewPrecioR"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Cargando..."
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_weight="0.18"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewAireacondicionado"
+            android:layout_width="133dp"
+            android:layout_height="match_parent"
+            android:text="Aire Acondicionado:"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textViewAireacondicionadoR"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=" Cargando..."
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_weight="0.18"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewcantidadDePasajerosActual"
+            android:layout_width="133dp"
+            android:layout_height="match_parent"
+            android:text="cantidad De Pasajeros Actual:"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+
+        <ImageView
+            android:id="@+id/imagenbarra"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/omsabarra"/>
+
+    </LinearLayout>
 </LinearLayout>

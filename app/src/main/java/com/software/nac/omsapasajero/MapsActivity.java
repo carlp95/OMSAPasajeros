@@ -1,5 +1,7 @@
 package com.software.nac.omsapasajero;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -10,14 +12,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.os.CancellationSignal;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,10 +30,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.gson.JsonArray;
 
-import org.json.JSONException;
-import org.jsoup.select.Evaluator;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,23 +39,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import static com.software.nac.omsapasajero.MainActivity.listRuta;
 
@@ -69,15 +51,18 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-    Marker m;
+    Marker m , mAutobus;
     private int id;
 
     public static APIParadas[] paradas;
     public static Ruta objectsRuta;
     public Autobus autobus;
+    public Autobus test;
     public DistanceAndTime distanceAndTime;
     public Autobus[] listAutobus;
-
+    Double lonAutobus ;
+    Double latAutobus;
+    ProgressDialog pDialog;
 
     APIParadas apiParadas = new APIParadas();
 
@@ -86,18 +71,18 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     Double mmlatActual = 19.83623;
     Double mmlonActual = -70.83638;
 
+
     private Boolean mapReady = false, postExecute = false, postExecuteForAutobus=false;
+    static Boolean distancia=false;
 
     @Override
     protected void onStart() {
         super.onStart();
         new HttpRequestTask().execute();
-
         // new MapsActivity.HttpRequestTask().execute();
        /* hiloconexion = new GetWebService();
         hiloconexion.execute(mmlatitude.toString(),mmlongitude.toString(),mmlatActual.toString(),mmlonActual.toString());
 */
-
     }
 
     @Override
@@ -105,7 +90,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         super.onStop();
         paradas = null;
         objectsRuta = null;
-
     }
 
     @Override
@@ -209,8 +193,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         @Override
         protected void onPostExecute(APIParadas info) {
             postExecute = true;
-            Log.i("paradaaaaaas",paradas[0].getId());
-            Log.i("paradaaaaaas",paradas[0].toString());
+//            Log.i("paradaaaaaas",paradas[0].getId());
+  //          Log.i("paradaaaaaas",paradas[0].toString());
 
             if (mapReady) {
                 final ArrayList<Marker> list = new ArrayList<>();
@@ -239,7 +223,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     }
 
     //______________________________________Get_Autobus_______________________________//
-//obtener la lista de autobuses de una ruta
+//obtener la lista de autobuses por ruta ruta
     private class GetAutobus extends AsyncTask<Void, Void, Autobus> {
         @Override
         protected Autobus doInBackground(Void... params) {
@@ -259,7 +243,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         Autobus[].class).getBody();
 
                     System.out.println("estoy en autobus)"+listAutobus[0].toString());
-                   // Log.i("Autoooooooo", autobus.getActivo());
+                    Log.i("Autoooooooo", listAutobus.toString());
 
 
             } catch (Exception e) {
@@ -280,20 +264,20 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         @Override
         protected void onPostExecute(Autobus info) {
             postExecuteForAutobus = true;
-
+            Log.i("Autoooooooo", String.valueOf(postExecuteForAutobus));
             if (mapReady) {
 
                 try {
                     int q = listAutobus.length;
                     for (int j = 0; j < q; j++) {
-                        Double lon = Double.parseDouble(listAutobus[j].getCoordenada().getLongitud());
-                        Double lat = Double.parseDouble(listAutobus[j].getCoordenada().getLatitude());
-                        LatLng latLng1 = new LatLng(lat, lon);
-                        mMap.addMarker(new MarkerOptions()
-                                .title("Autobus")
-                                .snippet("...")
+                        lonAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLongitud());
+                        latAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLatitude());
+                        LatLng latLng1 = new LatLng(latAutobus, lonAutobus);
+                        mAutobus = mMap.addMarker(new MarkerOptions()
+                                //.title("Autobus")
+                               // .snippet("...")
                                 .position(latLng1)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.autobus)));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
                     }
 
                 } catch (Exception e) {
@@ -305,15 +289,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
     }
 
-
     //___________________________________Obtener_Datos_Del_Autobus_______________//
 //obtener la infomacion del autobus mas cercano a una parada.
-
     private class AutobusConDatos extends AsyncTask<Integer, Void, DistanceAndTime> {
         @Override
         protected DistanceAndTime doInBackground(Integer... params) {
 
-            //  try {
+            try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
@@ -331,12 +313,118 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                     DistanceAndTime.class).getBody();
 
            // System.out.println("estoy en autobus)"+autobus.toString());
-            // Log.i("Autoooooooo", autobus.getActivo());
+            // Log.i("Autoooooooo1", distanceAndTime.toString());
 
 
-         /*   } catch (Exception e) {
+           } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+           }
+
+                return null;
+
+
+        }
+
+    /*    @Override
+        protected void onProgressUpdate(Integer... values) {
+            int progreso = values[0].intValue();
+
+            pDialog.setProgress(progreso);
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            pDialog.setOnCancelListener(new CancellationSignal.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    MiTareaAsincronaDialog.this.cancel(true);
+                }
+            });
+
+            pDialog.setProgress(0);
+            pDialog.show();
+        }*/
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            //super.onProgressUpdate(values);
+            int progreso = 2;
+
+            pDialog.setProgress(progreso);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //super.onPreExecute();
+
+            pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    AutobusConDatos.this.cancel(true);
+                }
+
+
+            });
+
+            pDialog.setProgress(0);
+            pDialog.show();
+        }
+
+        public RestTemplate getRestTemplate() {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            return restTemplate;
+        }
+
+
+        @Override
+        protected void onPostExecute(DistanceAndTime info) {
+            distancia=true;
+
+            pDialog.dismiss();
+            Intent nextScreen = new Intent(MapsActivity.this, Info.class);
+            nextScreen.putExtra("distanceAndTime", distanceAndTime);
+            startActivity(nextScreen);
+
+//            infText.setText(distanceAndTime.getAutobus().getActivo());
+
+        }
+        @Override
+        protected void onCancelled() {
+
+        }
+
+    }
+
+    //=+++=========================Test=====================
+/*
+    private class Test extends AsyncTask<Void, Void, Autobus> {
+        @Override
+        protected Autobus doInBackground(Void... params) {
+
+            try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/autobus/buscar/" + id);
+
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            test = getRestTemplate().exchange(
+                    builder.build().encode().toUri(),
+                    HttpMethod.GET,
+                    entity,
+                    Autobus.class).getBody();
+
+            System.out.println("estoy en autobus)"+test.toString());
+            Log.i("Autoooooooo", test.toString());
+
+
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
 
             return null;
         }
@@ -350,17 +438,43 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
 
         @Override
-        protected void onPostExecute(DistanceAndTime info) {
-           Log.i("Termine Hilo:","para los datos del autobus");
+        protected void onPostExecute(Autobus info) {
+            postExecuteForAutobus = true;
+
+            if (mapReady) {
+
+                try {
+                    if (test.getActivo().equals("true")) {
+                        lonAutobus = Double.parseDouble(test.getCoordenada().getLongitud());
+                        latAutobus = Double.parseDouble(test.getCoordenada().getLatitude());
+                        LatLng latLng1 = new LatLng(latAutobus, lonAutobus);
+                        mAutobus = mMap.addMarker(new MarkerOptions()
+                                //  .title("Autobus")
+                                //.snippet("...")
+                                .position(latLng1)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
+                    }else if (test.getActivo().equals("false")){
+                        lonAutobus = Double.parseDouble(test.getCoordenada().getLongitud());
+                        latAutobus = Double.parseDouble(test.getCoordenada().getLatitude());
+                        LatLng latLng1 = new LatLng(latAutobus, lonAutobus);
+                        mAutobus = mMap.addMarker(new MarkerOptions()
+                                //  .title("Autobus")
+                                //.snippet("...")
+                                .position(latLng1)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
+                    }
 
 
+                 } catch (Exception e) {
+                    e.printStackTrace();
+                 }
+            }
 
 
         }
 
     }
-
-
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -373,26 +487,12 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
         System.out.printf("=====Create===");
         mapFragment.getMapAsync(this);
-
         id = getIntent().getExtras().getInt("id", 1);
-
         Log.i("IdSI", String.valueOf(id));
 
 
+
     }
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-    private ArrayList<LatLng> latlngs = new ArrayList<>();
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -419,18 +519,29 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 Double lonActual = mLastLocation.getLongitude();
                 String idParada = marker.getId();
                 int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
-                idParadaConvert = idParadaConvert+1;
+
+                String idParadaActual = paradas[idParadaConvert].getId();
+
+                int idParadaActualInt = Integer.parseInt(idParadaActual);
+                //int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
+                //int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
+                //idParadaConvert = idParadaConvert+1;
 
                 Log.i("dddd", String.valueOf(latitude));
                 Log.i("dddd", String.valueOf(longitude));
-                Log.i("Id parada", String.valueOf(idParadaConvert));
+                Log.i("Id parada", idParadaActual);
                 Log.i("ddddActual", String.valueOf(latActual));
                 Log.i("ddddActuallo", String.valueOf(lonActual));
 
-                new AutobusConDatos().execute(idParadaConvert);
-                Intent nextScreen = new Intent(MapsActivity.this, Info.class);
-                // nextScreen.putExtra("userId", "" + id);
-                startActivity(nextScreen);
+
+                pDialog = new ProgressDialog(MapsActivity.this);
+                pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pDialog.setMessage("Buscando Autobús Disponible...");
+                pDialog.setCancelable(true);
+                pDialog.setMax(100);
+
+
+                new AutobusConDatos().execute(idParadaActualInt);
 
             }
         });
@@ -484,23 +595,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         mMap.setMyLocationEnabled(true);
     }
 
-
-/*
-    public void setRuta(Coordenadas[] coordenadas){
-        final Coordenadas[] coordenadas1 = coordenadas;
-        Button bajada =(Button) findViewById(R.id.idbajada);
-        bajada.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String coordenadas = coordenadas1[0].getLatitude();
-
-                Log.i("inf000", coordenadas);
-            }
-        });
-    }*/
-
-
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -514,8 +608,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -546,7 +640,19 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     @Override
     public void onLocationChanged(Location location) {
 
-        new GetAutobus().execute();
+
+       new GetAutobus().execute();
+        try {
+          //  Log.i("Autooooooootttttt", String.valueOf(postExecuteForAutobus));
+            if (postExecuteForAutobus) {
+                    //Log.i("resullll",listAutobus[0].getCoordenada().getLongitud());
+                    //Log.i("resullll",String.valueOf(lonAutobus));
+                    mAutobus.remove();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         mLastLocation = location;
         ArrayList<LatLng> latLng = new ArrayList<>();
         for (Ruta ruta : listRuta) {
@@ -576,39 +682,20 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 latLng.add(new LatLng(lati, lono));
             }
             Polyline line = mMap.addPolyline(new PolylineOptions()
-                    .addAll(latLng).width(10).color(Color.rgb(076, 145, 065)));
+                    .addAll(latLng).width(10).color(Color.rgb(218, 68, 68)));
+            //DA4444
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-        if (postExecute){
-            try {
-
-                Double lon = Double.parseDouble(autobus.getCoordenada().getLongitud());
-                Double lat = Double.parseDouble(autobus.getCoordenada().getLatitude());
-                LatLng latLng1 = new LatLng(lat, lon);
-                mMap.addMarker(new MarkerOptions()
-                        .title("Autobus")
-                        .snippet("...")
-                        .position(latLng1)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.autobus)));
-                   // Log.i("Autobus11111", autobus.getActivo());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
     }
-
 
     // private MarkerOptions options = new MarkerOptions();
     // private ArrayList<LatLng> latlngs = new ArrayList<>();
-
 //
-/*
-    @Override
+
+    /*@Override
     public void onMapReady(GoogleMap googleMap) {
 
         latlngs.add(new LatLng(12.334343, 33.43434));
@@ -620,7 +707,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 .title("Parada OMSA").position(marker)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
 
-     *//*   googleMap.addPolyline((new PolylineOptions())
+     *//**//*   googleMap.addPolyline((new PolylineOptions())
                 .add(MELBOURNE, ADELAIDE, PERTH));
 
         mClickablePolyline = map.addPolyline((new PolylineOptions())
@@ -640,7 +727,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 .add(new LatLng(SYDNEY.latitude + radius, SYDNEY.longitude + radius));
 
         // Move the map so that it is centered on the mutable polyline.
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SYDNEY));*//*
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SYDNEY));*//**//*
 // Add a thin red line from London to New York.
         Polyline line = googleMap.addPolyline(new PolylineOptions()
                 .add(new LatLng(19.48827848, -70.71671963),
@@ -711,13 +798,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 ).width(10)
                 .color(Color.rgb(076,145,065)));
 
-       *//* int radius = 5;
+       *//**//* int radius = 5;
         PolylineOptions options = new PolylineOptions()
                 .add(new LatLng(19.48827848 + radius, -70.71671963 + radius))
                 .add(new LatLng(19.48763117 + radius, -70.7144022 - radius))
                 .add(new LatLng(19.48237169- radius, -70.70822239 - radius))
                 .add(new LatLng(19.47703113 - radius, -70.69886684 + radius))
-                .add(new LatLng(19.47468446 + radius, -70.69500446 + radius));*//*
+                .add(new LatLng(19.47468446 + radius, -70.69500446 + radius));*//**//*
 
     }
     */

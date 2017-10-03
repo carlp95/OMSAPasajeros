@@ -1,21 +1,34 @@
 package com.software.nac.omsapasajero;
 
+import java.io.Serializable;
+
 /**
  * Created by Neury on 9/19/2017.
  */
 
-public class DistanceAndTime {
+public class DistanceAndTime implements Serializable {
     private String distance;
     private String duration;
     private String duration_Traffic;
+    private Autobus autobus;
+
+
+    public DistanceAndTime(String distance, String duration, String duration_Traffic, Autobus autobus) {
+        this.distance = distance;
+        this.duration = duration;
+        this.duration_Traffic = duration_Traffic;
+        this.autobus = autobus;
+    }
 
     public DistanceAndTime() {
     }
 
-    public DistanceAndTime(String distance, String duration, String duration_Traffic) {
-        this.distance = distance;
-        this.duration = duration;
-        this.duration_Traffic = duration_Traffic;
+    public Autobus getAutobus() {
+        return autobus;
+    }
+
+    public void setAutobus(Autobus autobus) {
+        this.autobus = autobus;
     }
 
     public String getDistance() {
@@ -40,5 +53,15 @@ public class DistanceAndTime {
 
     public void setDuration_Traffic(String duration_Traffic) {
         this.duration_Traffic = duration_Traffic;
+    }
+
+    @Override
+    public String toString() {
+        return "DistanceAndTime{" +
+                "distance='" + distance + '\'' +
+                ", duration='" + duration + '\'' +
+                ", duration_Traffic='" + duration_Traffic + '\'' +
+                ", autobus=" + autobus +
+                '}';
     }
 }

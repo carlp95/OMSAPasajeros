@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/backgroundLayout"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="70dp"
     android:orientation="vertical">
 
 
     <TextView
         android:id="@+id/idCorredor"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_weight="1"
+        android:layout_height="50dp"
         android:gravity="center_vertical"
         android:text="Corredor del Camaron"
         android:textSize="20sp"
@@ -19,8 +18,7 @@
     <TextView
         android:id="@+id/idCiudad"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_weight="1"
+        android:layout_height="35dp"
         android:text="Santiago"
         android:textSize="16sp"
         android:textStyle="bold" />

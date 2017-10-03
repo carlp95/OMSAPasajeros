@@ -1,17 +1,26 @@
 package com.software.nac.omsapasajero;
 
+import java.io.Serializable;
+
 /**
  * Created by Neury on 8/25/2017.
  */
 
-public class UltimaParada {
+public class UltimaParada implements Serializable {
     private String id;
     private String nombre;
-    private String ruta; // esto hay que enviar un null cambiar el JSON
+    private Ruta ruta; // esto hay que enviar un null cambiar el JSON
     private String paradaAnterior;
     private String paradaSiguiente;
     private Coordenadas coordenada;
 
+    public Ruta getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(Ruta ruta) {
+        this.ruta = ruta;
+    }
 
     public UltimaParada() {
 
@@ -59,11 +68,5 @@ public class UltimaParada {
         this.coordenada = coordenada;
     }
 
-    public String getRuta() {
-        return ruta;
-    }
 
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
-    }
 }

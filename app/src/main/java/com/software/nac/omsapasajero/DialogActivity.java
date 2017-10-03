@@ -47,10 +47,8 @@ public class DialogActivity extends Activity implements OnClickListener {
                 break;
 
             case R.id.cancel_btn_id:
-
                 showToastMessage("bajada");
                 this.finish();
-
                 break;
         }
 

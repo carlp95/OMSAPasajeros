@@ -1,5 +1,6 @@
 package com.software.nac.omsapasajero;
 
+import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * Created by Neury on 8/1/2017.
  */
 
-public class APIParadas {
+public class APIParadas implements Serializable {
     private String id;
     private String nombre;
     private String ruta;
