@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -51,16 +54,19 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-    Marker m , mAutobus;
+    Marker m,m2, mAutobus;
     private int id;
+    private int id2;
 
     public static APIParadas[] paradas;
+    public static APIParadas[] paradas2;
     public static Ruta objectsRuta;
+    public static Ruta objectsRuta2;
     public Autobus autobus;
     public Autobus test;
     public DistanceAndTime distanceAndTime;
     public Autobus[] listAutobus;
-    Double lonAutobus ;
+    Double lonAutobus;
     Double latAutobus;
     ProgressDialog pDialog;
 
@@ -72,13 +78,14 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     Double mmlonActual = -70.83638;
 
 
-    private Boolean mapReady = false, postExecute = false, postExecuteForAutobus=false;
-    static Boolean distancia=false;
+    private Boolean mapReady = false, postExecute = false,postExecute2 = false, postExecuteForAutobus = false;
+    static Boolean distancia = false;
 
     @Override
     protected void onStart() {
         super.onStart();
         new HttpRequestTask().execute();
+        new HttpRequestTask2().execute();
         // new MapsActivity.HttpRequestTask().execute();
        /* hiloconexion = new GetWebService();
         hiloconexion.execute(mmlatitude.toString(),mmlongitude.toString(),mmlatActual.toString(),mmlonActual.toString());
@@ -89,7 +96,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     protected void onStop() {
         super.onStop();
         paradas = null;
+        paradas2=null;
         objectsRuta = null;
+        objectsRuta2=null;
     }
 
     @Override
@@ -146,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         entity,
                         APIParadas[].class).getBody();
 
-                    System.out.println("objects = " + paradas[0]);
+                System.out.println("objects = " + paradas[0]);
 
 
             } catch (Exception e) {
@@ -194,7 +203,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         protected void onPostExecute(APIParadas info) {
             postExecute = true;
 //            Log.i("paradaaaaaas",paradas[0].getId());
-  //          Log.i("paradaaaaaas",paradas[0].toString());
+            //          Log.i("paradaaaaaas",paradas[0].toString());
 
             if (mapReady) {
                 final ArrayList<Marker> list = new ArrayList<>();
@@ -206,12 +215,108 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         Double lat = Double.parseDouble(paradas[j].getCoordenada().getLatitude());
                         LatLng latLng1 = new LatLng(lat, lon);
                         m = mMap.addMarker(new MarkerOptions()
-                                .title("Parada de la OMSA")
+                                .title("Parada de la OMSA Bajada")
                                 .snippet("Tocar aqui para mas informacion")
                                 .position(latLng1)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
                         list.add(m);
                     }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+    }
+
+
+    private class HttpRequestTask2 extends AsyncTask<Void, Void, APIParadas> {
+        @Override
+        protected APIParadas doInBackground(Void... params) {
+
+            try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/paradas/ruta/" + id2);
+
+                HttpEntity<?> entity = new HttpEntity<>(headers);
+
+                paradas2 = getRestTemplate().exchange(
+                        builder.build().encode().toUri(),
+                        HttpMethod.GET,
+                        entity,
+                        APIParadas[].class).getBody();
+
+                System.out.println("objects = " + paradas2[0]);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //==================================Para la Ruta==========================
+
+         /*   try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/ruta/1");
+
+                HttpEntity<?> entity = new HttpEntity<>(headers);
+
+                objectsRuta = getRestTemplate().exchange(
+                        builder.build().encode().toUri(),
+                        HttpMethod.GET,
+                        entity,
+                        Ruta[].class).getBody();
+
+                System.out.println("objects = " + objectsRuta[0]);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+*/
+
+
+            return null;
+        }
+
+        //====================================================================================//
+
+        public RestTemplate getRestTemplate() {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            return restTemplate;
+        }
+
+
+        @Override
+        protected void onPostExecute(APIParadas info) {
+            postExecute2 = true;
+//            Log.i("paradaaaaaas",paradas[0].getId());
+            //          Log.i("paradaaaaaas",paradas[0].toString());
+
+            if (mapReady) {
+                final ArrayList<Marker> list = new ArrayList<>();
+
+                try {
+                    int q = paradas2.length;
+                    for (int j = 0; j < q; j++) {
+                        Double lon = Double.parseDouble(paradas2[j].getCoordenada().getLongitud());
+                        Double lat = Double.parseDouble(paradas2[j].getCoordenada().getLatitude());
+                        LatLng latLng1 = new LatLng(lat, lon);
+                        m2 = mMap.addMarker(new MarkerOptions()
+                                .title("Parada de la OMSA Subida")
+                                .snippet("Tocar aqui para mas informacion")
+                                .position(latLng1)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
+                        list.add(m2);
+                    }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -242,8 +347,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         entity,
                         Autobus[].class).getBody();
 
-                    System.out.println("estoy en autobus)"+listAutobus[0].toString());
-                    Log.i("Autoooooooo", listAutobus.toString());
+                System.out.println("estoy en autobus)" + listAutobus[0].toString());
+                Log.i("Autoooooooo", listAutobus.toString());
 
 
             } catch (Exception e) {
@@ -275,7 +380,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         LatLng latLng1 = new LatLng(latAutobus, lonAutobus);
                         mAutobus = mMap.addMarker(new MarkerOptions()
                                 //.title("Autobus")
-                               // .snippet("...")
+                                // .snippet("...")
                                 .position(latLng1)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
                     }
@@ -296,31 +401,31 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         protected DistanceAndTime doInBackground(Integer... params) {
 
             try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-            Integer id = params[0];
-            String cadena = Integer.toString(id);
+                Integer id = params[0];
+                String cadena = Integer.toString(id);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/distancia/" + cadena);
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/distancia/" + cadena);
 
-            HttpEntity<?> entity = new HttpEntity<>(headers);
+                HttpEntity<?> entity = new HttpEntity<>(headers);
 
-            distanceAndTime = getRestTemplate().exchange(
-                    builder.build().encode().toUri(),
-                    HttpMethod.GET,
-                    entity,
-                    DistanceAndTime.class).getBody();
+                distanceAndTime = getRestTemplate().exchange(
+                        builder.build().encode().toUri(),
+                        HttpMethod.GET,
+                        entity,
+                        DistanceAndTime.class).getBody();
 
-           // System.out.println("estoy en autobus)"+autobus.toString());
-            // Log.i("Autoooooooo1", distanceAndTime.toString());
+                // System.out.println("estoy en autobus)"+autobus.toString());
+                // Log.i("Autoooooooo1", distanceAndTime.toString());
 
 
-           } catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-           }
+            }
 
-                return null;
+            return null;
 
 
         }
@@ -381,7 +486,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
         @Override
         protected void onPostExecute(DistanceAndTime info) {
-            distancia=true;
+            distancia = true;
 
             pDialog.dismiss();
             Intent nextScreen = new Intent(MapsActivity.this, Info.class);
@@ -391,6 +496,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 //            infText.setText(distanceAndTime.getAutobus().getActivo());
 
         }
+
         @Override
         protected void onCancelled() {
 
@@ -485,15 +591,16 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
-        System.out.printf("=====Create===");
+        //System.out.printf("=====Create===");
         mapFragment.getMapAsync(this);
         id = getIntent().getExtras().getInt("id", 1);
-        Log.i("IdSI", String.valueOf(id));
-
+        id2 = getIntent().getExtras().getInt("id2",1); //
+        // Log.i("IdSI", String.valueOf(id));
 
 
     }
 
+    private static final LatLng MOUNTAIN_VIEW = new LatLng(19.4507303, -70.69428563);
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapReady = true;
@@ -501,9 +608,17 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         final ArrayList<Marker> list = new ArrayList<>();
 
 //=============================Para central el mapa con coordenadas en el monumento==========================
-        LatLng lt = new LatLng(19.4507303, -70.69428563);
+        /*LatLng lt = new LatLng(19.4507303, -70.69428563);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(lt));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));*/
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(MOUNTAIN_VIEW)      // Sets the center of the map to Mountain View
+                .zoom(14)                   // Sets the zoom
+                .bearing(90)                // Sets the orientation of the camera to east
+                .tilt(60)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 //====================================================================================================
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -512,26 +627,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 // Determine what marker is clicked by using the argument passed in
                 // for example, marker.getTitle() or marker.getSnippet().
                 // Code here for navigating to fragment activity.
-                String id = marker.getId();
-                Double latitude = marker.getPosition().latitude;
-                Double longitude = marker.getPosition().longitude;
-                Double latActual = mLastLocation.getLatitude();
-                Double lonActual = mLastLocation.getLongitude();
-                String idParada = marker.getId();
-                int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
 
-                String idParadaActual = paradas[idParadaConvert].getId();
-
-                int idParadaActualInt = Integer.parseInt(idParadaActual);
-                //int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
-                //int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
-                //idParadaConvert = idParadaConvert+1;
-
-                Log.i("dddd", String.valueOf(latitude));
-                Log.i("dddd", String.valueOf(longitude));
-                Log.i("Id parada", idParadaActual);
-                Log.i("ddddActual", String.valueOf(latActual));
-                Log.i("ddddActuallo", String.valueOf(lonActual));
 
 
                 pDialog = new ProgressDialog(MapsActivity.this);
@@ -540,8 +636,72 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 pDialog.setCancelable(true);
                 pDialog.setMax(100);
 
+                String id = marker.getId();
+                Double latitude = marker.getPosition().latitude;
+                Double longitude = marker.getPosition().longitude;
+                Double latActual = mLastLocation.getLatitude();
+                Double lonActual = mLastLocation.getLongitude();
 
-                new AutobusConDatos().execute(idParadaActualInt);
+                String subida = marker.getTitle();
+                String bajada = marker.getTitle();
+                String idParada = marker.getId();
+                if (marker.getTitle().equals("Parada de la OMSA Bajada")){
+
+                    Log.i("pppp bajada", String.valueOf(idParada));
+                    int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
+                    Log.i("aaaaa", String.valueOf(idParadaConvert));
+                    Log.i("ppppppp", String.valueOf(paradas.length));
+
+                    Log.i("ppppppp", String.valueOf(paradas2.length));
+
+
+                    String idParadaActual = paradas[idParadaConvert].getId();
+                    Log.i("ppppppp", idParadaActual);
+                    Log.i("ppppppp", String.valueOf(paradas2.length));
+                    int idParadaActualInt = Integer.parseInt(idParadaActual);
+                    Log.i("dddd", String.valueOf(latitude));
+                    Log.i("dddd", String.valueOf(longitude));
+                    Log.i("Id parada", idParadaActual);
+                    Log.i("ddddActual", String.valueOf(latActual));
+                    Log.i("ddddActuallo", String.valueOf(lonActual));
+                    new AutobusConDatos().execute(idParadaActualInt);
+                }else{
+                   // String idParada = marker.getId();
+                    Log.i("pppppp", String.valueOf(idParada));
+                    int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
+                    int idreal = idParadaConvert-paradas.length;
+                    Log.i("aaaaa", String.valueOf(idParadaConvert));
+                    Log.i("aaaaareal", String.valueOf(idreal));
+                    Log.i("ppppppp", String.valueOf(paradas.length));
+                    Log.i("ppppppp", String.valueOf(paradas2.length));
+
+
+                    String idParadaActual = paradas2[idreal].getId();
+                    Log.i("ppppppp", idParadaActual);
+                    Log.i("ppppppp", String.valueOf(paradas.length));
+                    int idParadaActualInt = Integer.parseInt(idParadaActual);
+                    Log.i("dddd", String.valueOf(latitude));
+                    Log.i("dddd", String.valueOf(longitude));
+                    Log.i("Id parada", idParadaActual);
+                    Log.i("ddddActual", String.valueOf(latActual));
+                    Log.i("ddddActuallo", String.valueOf(lonActual));
+                    new AutobusConDatos().execute(idParadaActualInt);
+                }
+
+
+
+
+
+
+                //int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
+                //int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
+                //idParadaConvert = idParadaConvert+1;
+
+
+
+
+
+
 
             }
         });
@@ -556,7 +716,29 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                     Double lat = Double.parseDouble(paradas[j].getCoordenada().getLatitude());
                     LatLng latLng1 = new LatLng(lat, lon);
                     m = mMap.addMarker(new MarkerOptions()
-                            .title("Parada de la OMSA")
+                            .title("Parada de la OMSA Bajada")
+                            .snippet("Tocar aqui para mas informacion")
+                            .position(latLng1)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
+                    list.add(m);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (postExecute2) {
+
+            try {
+                int q = paradas2.length;
+
+                for (int j = 0; j < q; j++) {
+                    Double lon = Double.parseDouble(paradas2[j].getCoordenada().getLongitud());
+                    Double lat = Double.parseDouble(paradas2[j].getCoordenada().getLatitude());
+                    LatLng latLng1 = new LatLng(lat, lon);
+                    m = mMap.addMarker(new MarkerOptions()
+                            .title("Parada de la OMSA Subida")
                             .snippet("Tocar aqui para mas informacion")
                             .position(latLng1)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
@@ -593,7 +775,105 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+        ArrayList<LatLng> latLng = new ArrayList<>();
+
+        //Ruta 2
+        for (Ruta ruta2 : listRuta) {
+            if (ruta2.getId() == id2) {
+                objectsRuta2 = ruta2;
+                //  Toast.makeText(this, objectsRuta.getEsDireccionSubida(), Toast.LENGTH_SHORT).show();
+                break;
+            }
+
+        }
+        try {
+            int n = objectsRuta2.getCoordenadas().length;
+            for (int i = 0; i < n; i++) {
+                Double lati = Double.parseDouble(objectsRuta2.getCoordenadas()[i].getLatitude());
+                Double lono = Double.parseDouble(objectsRuta2.getCoordenadas()[i].getLongitud());
+//            Double lati1;
+//            Double lono1;
+//
+//            if (i < n - 1) {
+//                lati1 = Double.parseDouble(objectsRuta.getCoordenadas()[i + 1].getLatitude());
+//                lono1 = Double.parseDouble(objectsRuta.getCoordenadas()[i + 1].getLongitud());
+//            } else {
+//                lati1 = Double.parseDouble(objectsRuta.getCoordenadas()[0].getLatitude());
+//                lono1 = Double.parseDouble(objectsRuta.getCoordenadas()[0].getLongitud());
+//            }
+
+                latLng.add(new LatLng(lati, lono));
+            }
+
+            Polyline line2 = mMap.addPolyline(new PolylineOptions()
+                    .addAll(latLng).width(10));
+            line2.setColor(Color.BLUE);
+
+            //DA4444
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        setUpMap();
     }
+
+    private void setUpMap() {
+        // Enable MyLocation Layer of Google Map
+        mMap.setMyLocationEnabled(true);
+
+        // Get LocationManager object from System Service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        // Create a criteria object to retrieve provider
+        Criteria criteria = new Criteria();
+
+        // Get the name of the best provider
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        // Get Current Location
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location myLocation = locationManager.getLastKnownLocation(provider);
+
+        //set map type
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        // Get latitude of the current location
+        double latitude = myLocation.getLatitude();
+
+        // Get longitude of the current location
+        double longitude = myLocation.getLongitude();
+
+        // Create a LatLng object for the current location
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        // Show the current location in Google Map
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Zoom in the Google Map
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!"));
+    }
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -624,7 +904,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-        System.out.printf("====================Siiiiiiiii=============================");
+        //System.out.printf("====================Siiiiiiiii=============================");
     }
 
     @Override
@@ -681,13 +961,21 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
                 latLng.add(new LatLng(lati, lono));
             }
+
             Polyline line = mMap.addPolyline(new PolylineOptions()
                     .addAll(latLng).width(10).color(Color.rgb(218, 68, 68)));
+
+            line.setColor(Color.RED);
             //DA4444
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
+
+
 
     }
 

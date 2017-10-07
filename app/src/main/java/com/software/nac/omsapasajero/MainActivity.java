@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-                    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/rutas/buscar");
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/rutas/buscar");
 
                 HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -74,11 +74,6 @@ public class MainActivity extends AppCompatActivity
                         Ruta[].class).getBody();
 
                 //System.out.println("objects ============================================ " + listRuta);
-
-
-
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -172,7 +167,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent a = new Intent(MainActivity.this, MapsActivity.class)
-                        .putExtra("id",idCorredorToOpen+1);
+                        .putExtra("id",idCorredorToOpen)
+                        .putExtra("id2",idCorredorToOpen+1);
+
                 startActivity(a);
 
             }
