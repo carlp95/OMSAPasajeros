@@ -66,8 +66,11 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     public Autobus test;
     public DistanceAndTime distanceAndTime;
     public Autobus[] listAutobus;
+    public Autobus[] listAutobus2;
     Double lonAutobus;
     Double latAutobus;
+    Double lonAutobus2;
+    Double latAutobus2;
     ProgressDialog pDialog;
 
     APIParadas apiParadas = new APIParadas();
@@ -78,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     Double mmlonActual = -70.83638;
 
 
-    private Boolean mapReady = false, postExecute = false,postExecute2 = false, postExecuteForAutobus = false;
+    private Boolean mapReady = false, postExecute = false,postExecute2 = false, postExecuteForAutobus = false, postExecuteForAutobus2 = false;
     static Boolean distancia = false;
 
     @Override
@@ -369,20 +372,27 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         @Override
         protected void onPostExecute(Autobus info) {
             postExecuteForAutobus = true;
-            Log.i("Autoooooooo", String.valueOf(postExecuteForAutobus));
+           // Log.i("Autoooooooo", String.valueOf(postExecuteForAutobus));
             if (mapReady) {
 
                 try {
                     int q = listAutobus.length;
                     for (int j = 0; j < q; j++) {
-                        lonAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLongitud());
-                        latAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLatitude());
-                        LatLng latLng1 = new LatLng(latAutobus, lonAutobus);
-                        mAutobus = mMap.addMarker(new MarkerOptions()
-                                //.title("Autobus")
-                                // .snippet("...")
-                                .position(latLng1)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
+
+                        if ( listAutobus[j].getActivo().equals("true")){
+
+                            lonAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLongitud());
+                            latAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLatitude());
+                            LatLng latLng1 = new LatLng(latAutobus, lonAutobus);
+                            mAutobus = mMap.addMarker(new MarkerOptions()
+                                    //.title("Autobus")
+                                    // .snippet("...")
+                                    .position(latLng1)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
+
+                        }
+
+
                     }
 
                 } catch (Exception e) {
@@ -394,6 +404,73 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
     }
 
+//Autobus dos
+private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
+    @Override
+    protected Autobus doInBackground(Void... params) {
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/autobuses/buscar/ruta/" + id2);
+
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            listAutobus2 = getRestTemplate().exchange(
+                    builder.build().encode().toUri(),
+                    HttpMethod.GET,
+                    entity,
+                    Autobus[].class).getBody();
+
+            System.out.println("estoy en autobus)" + listAutobus2[0].toString());
+            Log.i("Autoooooooo", listAutobus2.toString());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public RestTemplate getRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        return restTemplate;
+    }
+
+
+    @Override
+    protected void onPostExecute(Autobus info) {
+        postExecuteForAutobus2 = true;
+        Log.i("Autoooooooo", String.valueOf(postExecuteForAutobus2));
+        if (mapReady) {
+
+            try {
+                int q = listAutobus2.length;
+                for (int j = 0; j < q; j++) {
+                    if (listAutobus2[j].getActivo().equals("true")) {
+                        lonAutobus2 = Double.parseDouble(listAutobus2[j].getCoordenada().getLongitud());
+                        latAutobus2 = Double.parseDouble(listAutobus2[j].getCoordenada().getLatitude());
+                        LatLng latLng1 = new LatLng(latAutobus2, lonAutobus2);
+                        mAutobus = mMap.addMarker(new MarkerOptions()
+                                //.title("Autobus")
+                                // .snippet("...")
+                                .position(latLng1)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+}
     //___________________________________Obtener_Datos_Del_Autobus_______________//
 //obtener la infomacion del autobus mas cercano a una parada.
     private class AutobusConDatos extends AsyncTask<Integer, Void, DistanceAndTime> {
@@ -600,7 +677,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
     }
 
-    private static final LatLng MOUNTAIN_VIEW = new LatLng(19.4507303, -70.69428563);
+    private static final LatLng MOUNTAIN_VIEW = new LatLng(19.451194, -70.706633);
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapReady = true;
@@ -613,7 +690,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));*/
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(MOUNTAIN_VIEW)      // Sets the center of the map to Mountain View
-                .zoom(14)                   // Sets the zoom
+                .zoom(15)                   // Sets the zoom
                 .bearing(90)                // Sets the orientation of the camera to east
                 .tilt(60)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
@@ -818,62 +895,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 //        setUpMap();
     }
 
-    private void setUpMap() {
-        // Enable MyLocation Layer of Google Map
-        mMap.setMyLocationEnabled(true);
-
-        // Get LocationManager object from System Service LOCATION_SERVICE
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        // Create a criteria object to retrieve provider
-        Criteria criteria = new Criteria();
-
-        // Get the name of the best provider
-        String provider = locationManager.getBestProvider(criteria, true);
-
-        // Get Current Location
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location myLocation = locationManager.getLastKnownLocation(provider);
-
-        //set map type
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
-        // Get latitude of the current location
-        double latitude = myLocation.getLatitude();
-
-        // Get longitude of the current location
-        double longitude = myLocation.getLongitude();
-
-        // Create a LatLng object for the current location
-        LatLng latLng = new LatLng(latitude, longitude);
-
-        // Show the current location in Google Map
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-        // Zoom in the Google Map
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(20));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!"));
-    }
-
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -922,12 +943,24 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
 
        new GetAutobus().execute();
+        new GetAutobus2().execute();
         try {
           //  Log.i("Autooooooootttttt", String.valueOf(postExecuteForAutobus));
             if (postExecuteForAutobus) {
                     //Log.i("resullll",listAutobus[0].getCoordenada().getLongitud());
                     //Log.i("resullll",String.valueOf(lonAutobus));
                     mAutobus.remove();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            //  Log.i("Autooooooootttttt", String.valueOf(postExecuteForAutobus));
+            if (postExecuteForAutobus2) {
+                //Log.i("resullll",listAutobus[0].getCoordenada().getLongitud());
+                //Log.i("resullll",String.valueOf(lonAutobus));
+                mAutobus.remove();
             }
         }catch (Exception e){
             e.printStackTrace();

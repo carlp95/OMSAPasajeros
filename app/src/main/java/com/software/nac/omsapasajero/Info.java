@@ -72,27 +72,27 @@ public class Info extends Activity implements View.OnClickListener {
                     tieneAire.setText(resultadoTieneAire);
                 }
 
-                if (resultadoCantidadPasajeros<=10)
+                if (resultadoCantidadPasajeros<=9)
                 {
-                    img.setImageResource(R.drawable.omsabarra1);
-                }else if (resultadoCantidadPasajeros>=10 && resultadoCantidadPasajeros <=20){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=20 && resultadoCantidadPasajeros <=30){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=30 && resultadoCantidadPasajeros <=40){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=40 && resultadoCantidadPasajeros <=50){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=50 && resultadoCantidadPasajeros <=60){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=60 && resultadoCantidadPasajeros <=70){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=70 && resultadoCantidadPasajeros <=80){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=80 && resultadoCantidadPasajeros <=90){
-                    img.setImageResource(R.drawable.omsabarra);
-                }else if (resultadoCantidadPasajeros>=90){
-                    img.setImageResource(R.drawable.omsabarra);
+                    img.setImageResource(R.drawable.omsa1);
+                }else if (resultadoCantidadPasajeros>9 && resultadoCantidadPasajeros <=18){
+                    img.setImageResource(R.drawable.omsa2);
+                }else if (resultadoCantidadPasajeros>18 && resultadoCantidadPasajeros <=27){
+                    img.setImageResource(R.drawable.omsa3);
+                }else if (resultadoCantidadPasajeros>27 && resultadoCantidadPasajeros <=36){
+                    img.setImageResource(R.drawable.omsa4);
+                }else if (resultadoCantidadPasajeros>36 && resultadoCantidadPasajeros <=45){
+                    img.setImageResource(R.drawable.omsa5);
+                }else if (resultadoCantidadPasajeros>45 && resultadoCantidadPasajeros <=54){
+                    img.setImageResource(R.drawable.omsa6);
+                }else if (resultadoCantidadPasajeros>54 && resultadoCantidadPasajeros <=63){
+                    img.setImageResource(R.drawable.omsa7);
+                }else if (resultadoCantidadPasajeros>63 && resultadoCantidadPasajeros <=72){
+                    img.setImageResource(R.drawable.omsa8);
+                }else if (resultadoCantidadPasajeros>72 && resultadoCantidadPasajeros <=81){
+                    img.setImageResource(R.drawable.omsa9);
+                }else if (resultadoCantidadPasajeros>81){
+                    img.setImageResource(R.drawable.omsa10);
                 }
                 //  cantidadPasajeros.setText(distanceAndTime.getAutobus().getCantidadDePasajerosActual());
 

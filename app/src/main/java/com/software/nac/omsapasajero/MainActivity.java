@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        findViewById(R.id.idbajada).setOnClickListener(new View.OnClickListener() {
+      /*  findViewById(R.id.idbajada).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent a = new Intent(MainActivity.this, MapsActivity.class)
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(a);
 
             }
-        });
+        });*/
 
         viewFlipper = (ViewFlipper) findViewById(R.id.viewSwitcher);
 
@@ -207,7 +207,13 @@ public class MainActivity extends AppCompatActivity
     public void setIdCorredor(int position) {
         idCorredorToOpen = position;
 
-        ViewAnimator.animate(findViewById(R.id.menuAbierto))
+        Intent a = new Intent(MainActivity.this, MapsActivity.class)
+                .putExtra("id",idCorredorToOpen)
+                .putExtra("id2",idCorredorToOpen+1);
+
+        startActivity(a);
+
+        /*ViewAnimator.animate(findViewById(R.id.menuAbierto))
                 .duration(500)
                 .translationY(0, 1800)
                 .onStop(new AnimationListener.Stop() {
@@ -221,7 +227,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 })
                 .start();
-
+*/
 
     }
 
