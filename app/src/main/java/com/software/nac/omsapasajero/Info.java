@@ -29,7 +29,6 @@ public class Info extends Activity implements View.OnClickListener {
         String resultadoTieneAire = "Si";
         ImageView img= (ImageView) findViewById(R.id.imagenbarra);
 
-
         try {
             TextView informacion = (TextView) findViewById(R.id.textView1);
             TextView tiempoAproximadoView = (TextView) findViewById(R.id.textViewTiempoAproximado);

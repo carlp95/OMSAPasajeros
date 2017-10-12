@@ -219,7 +219,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         LatLng latLng1 = new LatLng(lat, lon);
                         m = mMap.addMarker(new MarkerOptions()
                                 .title("Parada de la OMSA Bajada")
-                                .snippet("Tocar aqui para mas informacion")
+                                .snippet(paradas[j].getNombre())
                                 .position(latLng1)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
                         list.add(m);
@@ -314,7 +314,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         LatLng latLng1 = new LatLng(lat, lon);
                         m2 = mMap.addMarker(new MarkerOptions()
                                 .title("Parada de la OMSA Subida")
-                                .snippet("Tocar aqui para mas informacion")
+                                .snippet(paradas2[j].getNombre())
                                 .position(latLng1)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
                         list.add(m2);
@@ -733,35 +733,35 @@ private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
 
 
                     String idParadaActual = paradas[idParadaConvert].getId();
-                    Log.i("ppppppp", idParadaActual);
-                    Log.i("ppppppp", String.valueOf(paradas2.length));
+                   // Log.i("ppppppp", idParadaActual);
+                   // Log.i("ppppppp", String.valueOf(paradas2.length));
                     int idParadaActualInt = Integer.parseInt(idParadaActual);
-                    Log.i("dddd", String.valueOf(latitude));
+                 /*   Log.i("dddd", String.valueOf(latitude));
                     Log.i("dddd", String.valueOf(longitude));
                     Log.i("Id parada", idParadaActual);
                     Log.i("ddddActual", String.valueOf(latActual));
-                    Log.i("ddddActuallo", String.valueOf(lonActual));
+                    Log.i("ddddActuallo", String.valueOf(lonActual));*/
                     new AutobusConDatos().execute(idParadaActualInt);
                 }else{
                    // String idParada = marker.getId();
-                    Log.i("pppppp", String.valueOf(idParada));
+                   // Log.i("pppppp", String.valueOf(idParada));
                     int idParadaConvert = Integer.parseInt(idParada.replaceAll("[\\D]", ""));
                     int idreal = idParadaConvert-paradas.length;
-                    Log.i("aaaaa", String.valueOf(idParadaConvert));
+                  /*  Log.i("aaaaa", String.valueOf(idParadaConvert));
                     Log.i("aaaaareal", String.valueOf(idreal));
                     Log.i("ppppppp", String.valueOf(paradas.length));
                     Log.i("ppppppp", String.valueOf(paradas2.length));
 
-
+*/
                     String idParadaActual = paradas2[idreal].getId();
-                    Log.i("ppppppp", idParadaActual);
-                    Log.i("ppppppp", String.valueOf(paradas.length));
+                   //// Log.i("ppppppp", idParadaActual);
+                   // Log.i("ppppppp", String.valueOf(paradas.length));
                     int idParadaActualInt = Integer.parseInt(idParadaActual);
-                    Log.i("dddd", String.valueOf(latitude));
+                   /* Log.i("dddd", String.valueOf(latitude));
                     Log.i("dddd", String.valueOf(longitude));
                     Log.i("Id parada", idParadaActual);
                     Log.i("ddddActual", String.valueOf(latActual));
-                    Log.i("ddddActuallo", String.valueOf(lonActual));
+                    Log.i("ddddActuallo", String.valueOf(lonActual));*/
                     new AutobusConDatos().execute(idParadaActualInt);
                 }
 
