@@ -1,5 +1,7 @@
 package com.software.nac.omsapasajero;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -44,13 +46,18 @@ public class MainActivity extends AppCompatActivity
     public static Ruta[] objectsRuta;
     private ViewFlipper viewFlipper;
     private int idCorredorToOpen = 0;
-
+    ProgressDialog pDialog;
 
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        pDialog = new ProgressDialog(MainActivity.this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("Buscando lista de Corredores...");
+        pDialog.setCancelable(true);
+        pDialog.setMax(100);
         new HttpRequestTask2().execute();
 
     }
@@ -81,6 +88,31 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
 
+            @Override
+            protected void onProgressUpdate(Void... values) {
+                //super.onProgressUpdate(values);
+                int progreso = 2;
+
+                pDialog.setProgress(progreso);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                //super.onPreExecute();
+
+                pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        MainActivity.HttpRequestTask2.this.cancel(true);
+                    }
+
+
+                });
+
+                pDialog.setProgress(0);
+                pDialog.show();
+            }
+
         public RestTemplate getRestTemplate() {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -91,9 +123,11 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Ruta info) {
 
+            pDialog.dismiss();
             findViewById(R.id.menuCerrado).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //Log.i("wwwwwwwwwwwwww","aquiiiiiiiiii");
                     ListView listView = (ListView) findViewById(R.id.listViewCorredores);
 
                     try {
@@ -245,6 +279,7 @@ public class MainActivity extends AppCompatActivity
                     showOpenMenu();
                     break;
                 case R.id.menuAbierto:
+                   // Log.i("qqqqqqqqqqqqqqqq","aquiiiiiiiiii");
                     showCloseMenu();
                     break;
                 default:

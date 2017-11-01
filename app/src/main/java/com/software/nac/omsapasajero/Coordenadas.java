@@ -10,8 +10,16 @@ public class Coordenadas implements Serializable {
     private Long id;
     private String latitude;
     private String longitud;
+    private String habilitado;
 
     public Coordenadas() {
+    }
+
+    public Coordenadas(Long id, String latitude, String longitud, String habilitado) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitud = longitud;
+        this.habilitado = habilitado;
     }
 
     public Long getId() {
@@ -38,12 +46,11 @@ public class Coordenadas implements Serializable {
         this.longitud = longitud;
     }
 
-    @Override
-    public String toString() {
-        return "Coordenadas{" +
-                "id=" + id +
-                ", latitude='" + latitude + '\'' +
-                ", longitud='" + longitud + '\'' +
-                '}';
+    public String getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(String habilitado) {
+        this.habilitado = habilitado;
     }
 }

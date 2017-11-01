@@ -66,6 +66,7 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
     double destinoLa, destinoLo ,origenLaString, origenLoString;
     Button ir;
     private List<Polyline> polylines;
+    ProgressDialog pDialog;
     private static final int[] COLORS = new int[]{Color.RED};
 
 
@@ -95,8 +96,13 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
                   //  System.out.printf("informacion sobre mi ubicacion"+ mLastLocation.getLatitude());
                    // Log.i("enviar informacion", String.valueOf(destino.latitude));
                   //  Log.i("enviar informacion", String.valueOf(destino.longitude));
-                    Toast.makeText(getApplicationContext(),"Buscando Paradas...", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(),"Buscando Paradas...", Toast.LENGTH_SHORT).show();
 
+                    pDialog = new ProgressDialog(MapsActivityIrA.this);
+                    pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    pDialog.setMessage("Buscando Paradas Cercanas...");
+                    pDialog.setCancelable(true);
+                    pDialog.setMax(100);
                     new ParadasMasCerca().execute(mLastLocation.getLatitude(),mLastLocation.getLongitude(),destino.latitude,destino.longitude);
 
                 }else {
@@ -198,6 +204,34 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
             pDialog.show();
         }*/
 
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            //super.onProgressUpdate(values);
+            int progreso = 2;
+
+            pDialog.setProgress(progreso);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //super.onPreExecute();
+
+            pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    MapsActivityIrA.ParadasMasCerca.this.cancel(true);
+                }
+
+
+            });
+
+            pDialog.setProgress(0);
+            pDialog.show();
+        }
+
+
+
         public RestTemplate getRestTemplate() {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -210,6 +244,7 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
           /*  paradaCercana.getParadaSaida().getNombre();
             paradaCercana.getParadasLlegada().getNombre();
 */
+            pDialog.dismiss();
           paradaOrigen=true;
             LatLng salidaO;
             LatLng latLng1 = null;
@@ -246,16 +281,6 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
                 e.printStackTrace();
             }
 
-
-
-
-
-
-
-
-
-
-
             try {
 
                 Double latD = Double.parseDouble(paradaCercana.getParadaLLegada().getCoordenada().getLatitude());
@@ -265,7 +290,7 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
                  latLng2 = new LatLng(latD, lonD);
                 mMap.addMarker(new MarkerOptions()
                         .title("Parada de Llegada")
-                        .snippet(paradaCercana.getParadaSalida().getNombre())
+                        .snippet(paradaCercana.getParadaLLegada().getNombre())
                         .position(latLng2)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
 

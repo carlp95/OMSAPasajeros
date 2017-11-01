@@ -15,6 +15,7 @@ public class Ruta implements Serializable {
     private String ciudad;
     private String nombreCorredor;
     private String esDireccionSubida;
+    private String habilitado;
     private Coordenadas[] coordenadas;
     private String paradas; // esto debe llegar null hay que cambiar el Json
 
@@ -23,11 +24,17 @@ public class Ruta implements Serializable {
 
     }
 
-    public Ruta(int id, String ciudad, String nombreCorredor, String esDireccionSubida) {
+    public Ruta(int id, String distanciaTotal, String fechaCreada, String fechaUltimaModificacion, String ciudad, String nombreCorredor, String esDireccionSubida, String habilitado, Coordenadas[] coordenadas, String paradas) {
         this.id = id;
+        this.distanciaTotal = distanciaTotal;
+        this.fechaCreada = fechaCreada;
+        this.fechaUltimaModificacion = fechaUltimaModificacion;
         this.ciudad = ciudad;
         this.nombreCorredor = nombreCorredor;
         this.esDireccionSubida = esDireccionSubida;
+        this.habilitado = habilitado;
+        this.coordenadas = coordenadas;
+        this.paradas = paradas;
     }
 
     public int getId() {
@@ -86,6 +93,14 @@ public class Ruta implements Serializable {
         this.esDireccionSubida = esDireccionSubida;
     }
 
+    public String getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(String habilitado) {
+        this.habilitado = habilitado;
+    }
+
     public Coordenadas[] getCoordenadas() {
         return coordenadas;
     }
@@ -105,13 +120,14 @@ public class Ruta implements Serializable {
     @Override
     public String toString() {
         return "Ruta{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", distanciaTotal='" + distanciaTotal + '\'' +
                 ", fechaCreada='" + fechaCreada + '\'' +
                 ", fechaUltimaModificacion='" + fechaUltimaModificacion + '\'' +
                 ", ciudad='" + ciudad + '\'' +
                 ", nombreCorredor='" + nombreCorredor + '\'' +
                 ", esDireccionSubida='" + esDireccionSubida + '\'' +
+                ", habilitado='" + habilitado + '\'' +
                 ", coordenadas=" + Arrays.toString(coordenadas) +
                 ", paradas='" + paradas + '\'' +
                 '}';

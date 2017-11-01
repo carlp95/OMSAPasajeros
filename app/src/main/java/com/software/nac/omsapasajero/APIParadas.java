@@ -15,22 +15,23 @@ public class APIParadas implements Serializable {
     private String paradaAnterior;
     private String paradaSiguiente;
     private Coordenadas coordenada;
+    private String habilitado;
 
-
-    public String getRuta() {
-        return ruta;
+    public APIParadas() {
     }
 
-    public void setRuta(String ruta) {
+    public APIParadas(String id, String nombre, String ruta, String paradaAnterior, String paradaSiguiente, Coordenadas coordenada, String habilitado) {
+        this.id = id;
+        this.nombre = nombre;
         this.ruta = ruta;
+        this.paradaAnterior = paradaAnterior;
+        this.paradaSiguiente = paradaSiguiente;
+        this.coordenada = coordenada;
+        this.habilitado = habilitado;
     }
 
     public String getId() {
         return id;
-    }
-
-    public APIParadas() {
-
     }
 
     public void setId(String id) {
@@ -43,6 +44,14 @@ public class APIParadas implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
     }
 
     public String getParadaAnterior() {
@@ -69,6 +78,14 @@ public class APIParadas implements Serializable {
         this.coordenada = coordenada;
     }
 
+    public String getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(String habilitado) {
+        this.habilitado = habilitado;
+    }
+
     @Override
     public String toString() {
         return "APIParadas{" +
@@ -78,6 +95,7 @@ public class APIParadas implements Serializable {
                 ", paradaAnterior='" + paradaAnterior + '\'' +
                 ", paradaSiguiente='" + paradaSiguiente + '\'' +
                 ", coordenada=" + coordenada +
+                ", habilitado='" + habilitado + '\'' +
                 '}';
     }
 }

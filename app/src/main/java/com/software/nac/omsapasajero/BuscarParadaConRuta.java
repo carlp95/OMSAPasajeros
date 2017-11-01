@@ -13,19 +13,20 @@ public class BuscarParadaConRuta implements Serializable {
     private String paradaAnterior;
     private String paradaSiguiente;
     private Coordenadas coordenada;
+    private String habilitado;
 
 
-    public BuscarParadaConRuta(String id, String nombre, Ruta ruta, String paradaAnterior, String paradaSiguiente, Coordenadas coordenada) {
+    public BuscarParadaConRuta() {
+    }
+
+    public BuscarParadaConRuta(String id, String nombre, Ruta ruta, String paradaAnterior, String paradaSiguiente, Coordenadas coordenada, String habilitado) {
         this.id = id;
         this.nombre = nombre;
         this.ruta = ruta;
         this.paradaAnterior = paradaAnterior;
         this.paradaSiguiente = paradaSiguiente;
         this.coordenada = coordenada;
-    }
-
-
-    public BuscarParadaConRuta() {
+        this.habilitado = habilitado;
     }
 
     public String getId() {
@@ -76,6 +77,13 @@ public class BuscarParadaConRuta implements Serializable {
         this.coordenada = coordenada;
     }
 
+    public String getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(String habilitado) {
+        this.habilitado = habilitado;
+    }
 
     @Override
     public String toString() {
@@ -86,6 +94,7 @@ public class BuscarParadaConRuta implements Serializable {
                 ", paradaAnterior='" + paradaAnterior + '\'' +
                 ", paradaSiguiente='" + paradaSiguiente + '\'' +
                 ", coordenada=" + coordenada +
+                ", habilitado='" + habilitado + '\'' +
                 '}';
     }
 }

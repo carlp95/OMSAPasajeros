@@ -7,10 +7,13 @@
 
     <Button
         android:id="@+id/btir"
-        android:text="Ir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        android:layout_margin="6dp"
+        android:background="@drawable/boton_redondo"
+        android:text="Buscar Paradas"
+        android:textStyle="bold" />
     <fragment
         xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/map"

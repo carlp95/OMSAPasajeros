@@ -26,27 +26,30 @@ public class Autobus implements Serializable {
     private String cantidadDePasajerosActual;
     private Coordenadas coordenada;
     private String raspberryPiNumeroSerial;
-
-    public UltimaParada getUltimaParada() {
-        return ultimaParada;
-    }
-
-    public void setUltimaParada(UltimaParada ultimaParada) {
-        this.ultimaParada = ultimaParada;
-    }
+    private String habilitado;
 
     public Autobus() {
-
     }
 
-
-
-    public String getMatricula() {
-        return matricula;
-    }
-
-    public void setMatricula(String matricula) {
+    public Autobus(String id, String modelo, String cantidadDeAsientos, String peso, Ruta ruta, UltimaParada ultimaParada, String anoFabricacion, String activo, String conductor, String matricula, String fechaCreada, String ultimaFechaModificada, String precio, String tieneAireAcondicionado, String cantidadDePasajerosActual, Coordenadas coordenada, String raspberryPiNumeroSerial, String habilitado) {
+        this.id = id;
+        this.modelo = modelo;
+        this.cantidadDeAsientos = cantidadDeAsientos;
+        this.peso = peso;
+        this.ruta = ruta;
+        this.ultimaParada = ultimaParada;
+        this.anoFabricacion = anoFabricacion;
+        this.activo = activo;
+        this.conductor = conductor;
         this.matricula = matricula;
+        this.fechaCreada = fechaCreada;
+        this.ultimaFechaModificada = ultimaFechaModificada;
+        this.precio = precio;
+        this.tieneAireAcondicionado = tieneAireAcondicionado;
+        this.cantidadDePasajerosActual = cantidadDePasajerosActual;
+        this.coordenada = coordenada;
+        this.raspberryPiNumeroSerial = raspberryPiNumeroSerial;
+        this.habilitado = habilitado;
     }
 
     public String getId() {
@@ -89,14 +92,14 @@ public class Autobus implements Serializable {
         this.ruta = ruta;
     }
 
-   /* public UltimaParada getUltimaParada() {
+    public UltimaParada getUltimaParada() {
         return ultimaParada;
     }
 
     public void setUltimaParada(UltimaParada ultimaParada) {
         this.ultimaParada = ultimaParada;
     }
-*/
+
     public String getAnoFabricacion() {
         return anoFabricacion;
     }
@@ -119,6 +122,14 @@ public class Autobus implements Serializable {
 
     public void setConductor(String conductor) {
         this.conductor = conductor;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
     }
 
     public String getFechaCreada() {
@@ -177,6 +188,15 @@ public class Autobus implements Serializable {
         this.raspberryPiNumeroSerial = raspberryPiNumeroSerial;
     }
 
+    public String getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(String habilitado) {
+        this.habilitado = habilitado;
+    }
+
+
     @Override
     public String toString() {
         return "Autobus{" +
@@ -185,7 +205,7 @@ public class Autobus implements Serializable {
                 ", cantidadDeAsientos='" + cantidadDeAsientos + '\'' +
                 ", peso='" + peso + '\'' +
                 ", ruta=" + ruta +
-                ", ultimaParada='" + ultimaParada + '\'' +
+                ", ultimaParada=" + ultimaParada +
                 ", anoFabricacion='" + anoFabricacion + '\'' +
                 ", activo='" + activo + '\'' +
                 ", conductor='" + conductor + '\'' +
@@ -197,6 +217,7 @@ public class Autobus implements Serializable {
                 ", cantidadDePasajerosActual='" + cantidadDePasajerosActual + '\'' +
                 ", coordenada=" + coordenada +
                 ", raspberryPiNumeroSerial='" + raspberryPiNumeroSerial + '\'' +
+                ", habilitado='" + habilitado + '\'' +
                 '}';
     }
 }

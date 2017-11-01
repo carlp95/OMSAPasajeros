@@ -405,7 +405,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     }
 
 //Autobus dos
-private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
+    private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
     @Override
     protected Autobus doInBackground(Void... params) {
 
@@ -864,6 +864,11 @@ private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
 
         }
         try {
+            Log.i("Nombreeeeee",objectsRuta2.getNombreCorredor().toString());
+            Log.i("Nombreeeeee", String.valueOf(objectsRuta2.getId()).toString());
+            Log.i("Nombreeeeee",objectsRuta2.getCiudad().toString());
+
+
             int n = objectsRuta2.getCoordenadas().length;
             for (int i = 0; i < n; i++) {
                 Double lati = Double.parseDouble(objectsRuta2.getCoordenadas()[i].getLatitude());
@@ -941,8 +946,7 @@ private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
     @Override
     public void onLocationChanged(Location location) {
 
-
-       new GetAutobus().execute();
+        new GetAutobus().execute();
         new GetAutobus2().execute();
         try {
           //  Log.i("Autooooooootttttt", String.valueOf(postExecuteForAutobus));
@@ -968,6 +972,7 @@ private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
 
         mLastLocation = location;
         ArrayList<LatLng> latLng = new ArrayList<>();
+        //ruta 1
         for (Ruta ruta : listRuta) {
             if (ruta.getId() == id) {
                 objectsRuta = ruta;
@@ -977,6 +982,10 @@ private class GetAutobus2 extends AsyncTask<Void, Void, Autobus> {
 
         }
         try {
+            Log.i("Nombreeeeee1",objectsRuta.getNombreCorredor().toString());
+            Log.i("Nombreeeeee1", String.valueOf(objectsRuta.getId()).toString());
+            Log.i("Nombreeeeee1",objectsRuta.getCiudad().toString());
+            //Log.i("Nombreeeeee1",objectsRuta.getCoordenadas()[0].getLongitud().toString());
             int n = objectsRuta.getCoordenadas().length;
             for (int i = 0; i < n; i++) {
                 Double lati = Double.parseDouble(objectsRuta.getCoordenadas()[i].getLatitude());
