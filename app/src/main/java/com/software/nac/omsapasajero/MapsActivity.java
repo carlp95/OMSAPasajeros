@@ -140,7 +140,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
     }
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, APIParadas> {
+    private class HttpRequestTask extends AsyncTask<Void, Void, APIParadas>     {
         @Override
         protected APIParadas doInBackground(Void... params) {
 
