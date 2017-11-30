@@ -54,7 +54,10 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-    Marker m,m2, mAutobus;
+    Marker m,m2, mAutobus1,mAutobus22;
+    Marker mAutobus[] = new Marker[10] ;
+    Marker mAutobus2[] = new Marker[10];
+    ArrayList<Marker> autobusPrueba = new ArrayList<>();
     private int id;
     private int id2;
 
@@ -343,20 +346,22 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/autobuses/buscar/ruta/" + id);
 
                 HttpEntity<?> entity = new HttpEntity<>(headers);
-
+                //Log.i("datooAutobus1",builder.toString());
                 listAutobus = getRestTemplate().exchange(
                         builder.build().encode().toUri(),
                         HttpMethod.GET,
                         entity,
                         Autobus[].class).getBody();
 
-                System.out.println("estoy en autobus)" + listAutobus[0].toString());
-                Log.i("Autoooooooo", listAutobus.toString());
+               // System.out.println("estoy en autobus)" + listAutobus[0].toString());
+               // Log.i("Autoooooooo", listAutobus.toString());
 
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
 
             return null;
         }
@@ -377,28 +382,33 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
                 try {
                     int q = listAutobus.length;
+
+                  //  Log.i("Calvo", String.valueOf(listAutobus.length));
                     for (int j = 0; j < q; j++) {
 
-                        if ( listAutobus[j].getActivo().equals("true")){
-
+                        if (listAutobus[j].getActivo().equals("true")){
                             lonAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLongitud());
                             latAutobus = Double.parseDouble(listAutobus[j].getCoordenada().getLatitude());
                             LatLng latLng1 = new LatLng(latAutobus, lonAutobus);
-                            mAutobus = mMap.addMarker(new MarkerOptions()
-                                    //.title("Autobus")
-                                    // .snippet("...")
-                                    .position(latLng1)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
 
+                             mAutobus[j]=mMap.addMarker(new MarkerOptions()
+                                     //.title("Autobus")
+                                     // .snippet("...")
+                                     .position(latLng1)
+                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.logobus)));
+
+
+                            }
+
+                          //  Log.i("Calvo",listAutobus[j].toString());
+                          //  Log.i("Calvo",listAutobus[j].getConductor().toString());
                         }
-
-
-                    }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
+
 
         }
 
@@ -414,7 +424,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/autobuses/buscar/ruta/" + id2);
-
+      //      Log.i("datooAutobus2",builder.toString());
             HttpEntity<?> entity = new HttpEntity<>(headers);
 
             listAutobus2 = getRestTemplate().exchange(
@@ -423,8 +433,10 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                     entity,
                     Autobus[].class).getBody();
 
+/*
             System.out.println("estoy en autobus)" + listAutobus2[0].toString());
             Log.i("Autoooooooo", listAutobus2.toString());
+*/
 
 
         } catch (Exception e) {
@@ -455,7 +467,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         lonAutobus2 = Double.parseDouble(listAutobus2[j].getCoordenada().getLongitud());
                         latAutobus2 = Double.parseDouble(listAutobus2[j].getCoordenada().getLatitude());
                         LatLng latLng1 = new LatLng(latAutobus2, lonAutobus2);
-                        mAutobus = mMap.addMarker(new MarkerOptions()
+                        mAutobus2[j] = mMap.addMarker(new MarkerOptions()
                                 //.title("Autobus")
                                 // .snippet("...")
                                 .position(latLng1)
@@ -485,7 +497,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 String cadena = Integer.toString(id);
 
                 UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/distancia/" + cadena);
-
+                Log.i("datooAutobusConD",builder.toString());
                 HttpEntity<?> entity = new HttpEntity<>(headers);
 
                 distanceAndTime = getRestTemplate().exchange(
@@ -950,10 +962,23 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         new GetAutobus2().execute();
         try {
           //  Log.i("Autooooooootttttt", String.valueOf(postExecuteForAutobus));
+            Log.i("Calvo", String.valueOf(postExecuteForAutobus));
             if (postExecuteForAutobus) {
                     //Log.i("resullll",listAutobus[0].getCoordenada().getLongitud());
-                    //Log.i("resullll",String.valueOf(lonAutobus));
-                    mAutobus.remove();
+                  //  Log.i("Calvo",mAutobus[0].toString());
+
+                int q= mAutobus.length;
+                for (int j = 0; j < q; j++) {
+                    //mMap.clear();
+                    if (mAutobus[j]!=null){
+                        mAutobus[j].remove();
+                    }
+
+
+                    //mAutobus1.remove();
+                }
+                postExecuteForAutobus =false;
+
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -964,7 +989,14 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             if (postExecuteForAutobus2) {
                 //Log.i("resullll",listAutobus[0].getCoordenada().getLongitud());
                 //Log.i("resullll",String.valueOf(lonAutobus));
-                mAutobus.remove();
+                int q= mAutobus2.length;
+                for (int j = 0; j < q; j++) {
+                    if (mAutobus2[j]!=null){
+                     mAutobus2[j].remove();
+                    }
+
+                }
+                postExecuteForAutobus2 =false;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -982,9 +1014,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
         }
         try {
-            Log.i("Nombreeeeee1",objectsRuta.getNombreCorredor().toString());
+           /* Log.i("Nombreeeeee1",objectsRuta.getNombreCorredor().toString());
             Log.i("Nombreeeeee1", String.valueOf(objectsRuta.getId()).toString());
-            Log.i("Nombreeeeee1",objectsRuta.getCiudad().toString());
+            Log.i("Nombreeeeee1",objectsRuta.getEsDireccionSubida().toString());*/
             //Log.i("Nombreeeeee1",objectsRuta.getCoordenadas()[0].getLongitud().toString());
             int n = objectsRuta.getCoordenadas().length;
             for (int i = 0; i < n; i++) {

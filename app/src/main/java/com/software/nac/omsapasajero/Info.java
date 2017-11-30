@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.software.nac.omsapasajero.MapsActivity.distancia;
 
 public class Info extends Activity implements View.OnClickListener {
@@ -21,6 +23,9 @@ public class Info extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        String hora;
+        String horaTrafico;
+        String horaConTrafico;
         Intent i = getIntent();
         DistanceAndTime distanceAndTime = (DistanceAndTime)i.getSerializableExtra("distanceAndTime");
 
@@ -59,9 +64,17 @@ public class Info extends Activity implements View.OnClickListener {
                 //String duracionT =distanceAndTime.getDuration_Traffic();
                 //System.out.printf("Duracion en t ->"+duracionT);
 
-                tiempoAproximadoView.setText(resultadoTimepoAproximado+" Minutos");
-                tiempoSinTrafico.setText(resultadoDuracion +" Minutos");
-                tiempoConTrafico.setText(resultadoDuracionTrafico+" Minutos");
+                hora = formatearMinutosAHoraMinuto(resultadoTimepoAproximado);
+                horaTrafico =formatearMinutosAHoraMinuto(resultadoDuracion);
+                horaConTrafico = formatearMinutosAHoraMinuto(resultadoDuracionTrafico);
+
+               /* Log.i("Calvo", hora);
+                Log.i("Calvo", horaTrafico);
+                Log.i("Calvo", horaConTrafico);*/
+
+                tiempoAproximadoView.setText(hora+" Minutos");
+                tiempoSinTrafico.setText(horaTrafico +" Minutos");
+                tiempoConTrafico.setText(horaConTrafico+" Minutos");
                 conductor.setText(distanceAndTime.getAutobus().getConductor());
                 precio.setText(distanceAndTime.getAutobus().getPrecio()+ " RD$");
                 if (distanceAndTime.getAutobus().getTieneAireAcondicionado().equals("true")){
@@ -119,6 +132,18 @@ public class Info extends Activity implements View.OnClickListener {
 
 
     }
+
+
+
+
+    public String formatearMinutosAHoraMinuto(int minutos) {
+        String formato = "%02d:%02d";
+        long horasReales = TimeUnit.MINUTES.toHours(minutos);
+        long minutosReales = TimeUnit.MINUTES.toMinutes(minutos) - TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours(minutos));
+        return String.format(formato, horasReales, minutosReales);
+    }
+
+
 
     private int round(double d){
         double dAbs = Math.abs(d);

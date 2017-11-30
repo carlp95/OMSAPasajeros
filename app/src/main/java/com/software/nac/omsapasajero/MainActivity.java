@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity
     private int idCorredorToOpen = 0;
     ProgressDialog pDialog;
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity
     }
 //================================================================================//
 
-        private class HttpRequestTask2 extends AsyncTask<Void, Void, Ruta> {
+    private class HttpRequestTask2 extends AsyncTask<Void, Void, Ruta> {
         @Override
         protected Ruta doInBackground(Void... params) {
             try {
@@ -264,8 +263,6 @@ public class MainActivity extends AppCompatActivity
 */
 
     }
-
-
 
 
     @Override

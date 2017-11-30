@@ -36,7 +36,7 @@
             android:layout_marginTop="44dp"
             android:numStars="5"
             android:rating="0"
-            android:stepSize="0.5" />
+            android:stepSize="1.0" />
 
     </LinearLayout>
 
@@ -59,8 +59,10 @@
 
         <EditText
             android:id="@+id/edtComentario"
+            android:lines="4"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:gravity="bottom" />
 
 
     </LinearLayout>

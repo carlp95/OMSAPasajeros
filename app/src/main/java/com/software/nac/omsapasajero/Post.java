@@ -8,21 +8,39 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Post {
-    @SerializedName("fechaPublicada")
-    @Expose
+
+
+    private Integer id;
+
     private Long fechaPublicada;
 
-    @SerializedName("numeroDePuntuacion")
-    @Expose
     private Integer numeroDePuntuacion;
 
-    @SerializedName("comentario")
-    @Expose
     private String comentario;
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
+    public Post() {
+    }
+
+    public Post(Long fechaPublicada, Integer numeroDePuntuacion, String comentario) {
+        this.fechaPublicada = fechaPublicada;
+        this.numeroDePuntuacion = numeroDePuntuacion;
+        this.comentario = comentario;
+    }
+
+    public Post(Integer id, Long fechaPublicada, Integer numeroDePuntuacion, String comentario) {
+        this.id = id;
+        this.fechaPublicada = fechaPublicada;
+        this.numeroDePuntuacion = numeroDePuntuacion;
+        this.comentario = comentario;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Long getFechaPublicada() {
         return fechaPublicada;
@@ -48,21 +66,13 @@ public class Post {
         this.comentario = comentario;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "Post{" +
-                "fechaPublicada=" + fechaPublicada +
+                "id=" + id +
+                ", fechaPublicada=" + fechaPublicada +
                 ", numeroDePuntuacion=" + numeroDePuntuacion +
                 ", comentario='" + comentario + '\'' +
-                ", id=" + id +
                 '}';
     }
 }

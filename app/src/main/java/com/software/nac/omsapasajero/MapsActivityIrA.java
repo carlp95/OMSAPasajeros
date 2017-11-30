@@ -566,7 +566,7 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
                         .title("Destino");
                     mMap.addMarker(marker);
 
-                    Log.i("qqqqqqqqqq", String.valueOf(destino.latitude));
+                    //Log.i("qqqqqqqqqq", String.valueOf(destino.latitude));
                     //System.out.printf("aaaaaaaaaaaa");
                   //  destinoLaString = String.valueOf(point.latitude);
                     //destinoLoString = String.valueOf(point.longitude);
