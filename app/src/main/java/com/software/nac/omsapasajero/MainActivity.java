@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.app_bar_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -267,22 +267,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            switch (viewFlipper.getCurrentView().getId()) {
-                case R.id.menuRutas:
-                    showOpenMenu();
-                    break;
-                case R.id.menuAbierto:
-                   // Log.i("qqqqqqqqqqqqqqqq","aquiiiiiiiiii");
-                    showCloseMenu();
-                    break;
-                default:
-                    super.onBackPressed();
-
-            }
+        switch (viewFlipper.getCurrentView().getId()) {
+            case R.id.menuRutas:
+                showOpenMenu();
+                break;
+            case R.id.menuAbierto:
+                // Log.i("qqqqqqqqqqqqqqqq","aquiiiiiiiiii");
+                showCloseMenu();
+                break;
+            default:
+                super.onBackPressed();
 
         }
     }

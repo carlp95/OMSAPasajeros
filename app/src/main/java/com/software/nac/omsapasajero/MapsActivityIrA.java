@@ -269,7 +269,7 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
                  @Override
                  public boolean onMarkerClick(Marker marker) {
                      if(marker.getTitle().equals("Parada de Salida")){
-                        Toast.makeText(getApplicationContext(),"holaaaaaaaa",Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(getApplicationContext(),"Parada de Salida",Toast.LENGTH_SHORT).show();
 
                      }
                      return false;
@@ -293,6 +293,9 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
                         .snippet(paradaCercana.getParadaLLegada().getNombre())
                         .position(latLng2)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.paradas)));
+
+
+
 
             } catch (Exception e) {
                 e.printStackTrace();
