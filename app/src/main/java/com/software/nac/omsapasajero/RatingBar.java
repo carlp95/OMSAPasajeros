@@ -229,7 +229,7 @@ public class RatingBar extends AppCompatActivity {
         public  Post registrarToken(Post credencial){
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-            return restTemplate.postForObject("http://omsa.herokuapp.com/api/recibir/comentario/",credencial,Post.class);
+            return restTemplate.postForObject("http://gps-qjm.herokuapp.com/api/recibir/comentario/",credencial,Post.class);
         }
 
 
@@ -245,7 +245,7 @@ public class RatingBar extends AppCompatActivity {
                 .setLenient()
                 .create();
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://omsa.herokuapp.com/api/")
+                .baseUrl("http://gps-qjm.herokuapp.com/api/")
                 .addConverterFactory(GsonConverterFactory.create(gson));
 
         Retrofit retrofit = builder.build();
