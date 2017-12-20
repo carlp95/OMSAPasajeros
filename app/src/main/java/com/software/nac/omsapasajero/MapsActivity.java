@@ -151,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/paradas/ruta/" + id);
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://gps-qjm.herokuapp.com/api/paradas/ruta/" + id);
 
                 HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -246,7 +246,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/paradas/ruta/" + id2);
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://gps-qjm.herokuapp.com/api/paradas/ruta/" + id2);
 
                 HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -343,7 +343,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/autobuses/buscar/ruta/" + id);
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://gps-qjm.herokuapp.com/api/autobuses/buscar/ruta/" + id);
 
                 HttpEntity<?> entity = new HttpEntity<>(headers);
                 //Log.i("datooAutobus1",builder.toString());
@@ -423,7 +423,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/autobuses/buscar/ruta/" + id2);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://gps-qjm.herokuapp.com/api/autobuses/buscar/ruta/" + id2);
       //      Log.i("datooAutobus2",builder.toString());
             HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -496,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                 Integer id = params[0];
                 String cadena = Integer.toString(id);
 
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/distancia/" + cadena);
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://gps-qjm.herokuapp.com/api/distancia/" + cadena);
                 Log.i("datooAutobusConD",builder.toString());
                 HttpEntity<?> entity = new HttpEntity<>(headers);
 
