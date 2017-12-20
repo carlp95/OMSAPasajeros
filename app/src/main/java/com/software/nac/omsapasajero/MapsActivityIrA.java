@@ -134,7 +134,7 @@ public class MapsActivityIrA extends FragmentActivity  implements GoogleMap.OnIn
                 String cadena2 = Double.toString(latDestino);
                 String cadena3 = Double.toString(lngDestino);
             //    Log.i("cadenaa", cadena0+cadena1+cadena2+cadena3);
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/paradas/mas/cerca/"+cadena0+"/"+cadena1+"/"+cadena2+"/"+cadena3+"/");
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://gps-qjm.herokuapp.com/api/paradas/mas/cerca/"+cadena0+"/"+cadena1+"/"+cadena2+"/"+cadena3+"/");
 
 
                 HttpEntity<?> entity = new HttpEntity<>(headers);
