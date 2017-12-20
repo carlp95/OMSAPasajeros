@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://omsa.herokuapp.com/api/rutas/buscar");
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://gps-qjm.herokuapp.com/api/rutas/buscar");
 
                 HttpEntity<?> entity = new HttpEntity<>(headers);
 
